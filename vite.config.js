@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 export default defineConfig({
   base: './',
+  resolve: { dedupe: ['three'] },
+  optimizeDeps: { include: ['three', 'three/addons/environments/RoomEnvironment.js', 'three/addons/utils/BufferGeometryUtils.js'] },
   build: {
     rollupOptions: {
       input: {

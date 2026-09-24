@@ -7,3 +7,5 @@ Main project work belongs on `projects.html` and the homepage’s selected-work 
 `public/` contains deployable static assets. `archive/legacy/` is retained source history, excluded from the build. All installation and build commands run at the repository root. Avoid adding nested package manifests for new experiments.
 
 The study timer and arcade rules are pure modules with behavior tests. Audio and rendering are separate from those rules. QR tests use a real canvas implementation and decoder. Shared bouquet URLs work under a repository subpath and expose no editing controls on the recipient page.
+
+The homepage owns `src/home/`: its spatial hero progressively loads Three.js, generates its sculpture and petals without external assets, and projects HTML information panels from world-space anchors. Motion can be paused, honors reduced-motion preferences, stops outside the viewport, and disposes GPU resources on teardown. Other portfolio pages do not load the hero module.
