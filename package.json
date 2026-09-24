@@ -12,7 +12,8 @@
     "serve": "vite preview --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "prepare:models": "node scripts/prepare-study-models.mjs"
   },
   "dependencies": {
     "lucide": "0.468.0",

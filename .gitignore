@@ -4,3 +4,5 @@ dist/
 .env
 .env.*
 !.env.example
+# Original artist exports stay local; optimized runtime copies are versioned.
+glbfiles/

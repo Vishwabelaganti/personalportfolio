@@ -1,9 +1,15 @@
 import { StudyScene } from './scene.js';
 import { StudyAudio } from './audio.js';
 import { FocusTimer } from './timer.js';
+import { createMixer } from './mixer-ui.js';
+import { MOODS } from './composition.js';
 import './style.css';
 const $=s=>document.querySelector(s);
 const timer=new FocusTimer();const audio=new StudyAudio(new URL('../audio/',location.href));let scene;
+const loadStatus=document.createElement('span');loadStatus.id='scene-load-status';loadStatus.className='scene-load-status';loadStatus.setAttribute('role','status');loadStatus.textContent='Arranging the courtyard…';$('.study-view').append(loadStatus);
+const lofiLabel=document.querySelector('label[for="lofi-volume"]');lofiLabel.firstChild.textContent='Lofi loop';
+$('.study-heading .eyebrow').textContent='PLAYGROUND / STUDY SPACE';
+$('.study-heading h1+p').textContent='A quiet courtyard. A soundtrack of your own. A little room to focus.';
 function tell(text){$('#study-status').textContent=text;}
 function strike(i){scene?.strike(i);audio.chime(i).catch(()=>tell('Sound could not start. Try tapping a chime again.'));}
 try{scene=new StudyScene($('#study-scene'),strike);}catch(error){$('#study-scene').innerHTML='<div class="study-fallback">The 3D view is unavailable here.<br>Your timer, notes, and sound mixer still work.</div>';console.warn('Study scene unavailable',error);}
@@ -17,10 +23,11 @@ $('#timer-reset').addEventListener('click',()=>{timer.reset();updateTimer();tell
 document.querySelectorAll('[data-minutes]').forEach(b=>b.addEventListener('click',()=>{timer.reset(Number(b.dataset.minutes));document.querySelectorAll('[data-minutes]').forEach(el=>el.setAttribute('aria-pressed',el===b));updateTimer();}));
 setInterval(updateTimer,250);
 document.querySelectorAll('[data-audio]').forEach(input=>input.addEventListener('input',async()=>{try{await audio.setTrack(input.dataset.audio,Number(input.value));}catch{input.value=0;tell('That sound could not load. The other controls are still available.');}}));
-$('#mute-audio').addEventListener('click',async()=>{try{await audio.mute(!audio.muted);$('#mute-audio').textContent=audio.muted?'Unmute sounds':'Mute sounds';$('#mute-audio').setAttribute('aria-pressed',audio.muted);}catch{tell('A sound could not resume. Adjust its slider to try again.');}});
+$('#mute-audio').addEventListener('click',async()=>{try{await audio.mute(!audio.muted);mixer.engine.mute(audio.muted);$('#mute-audio').textContent=audio.muted?'Unmute sounds':'Mute sounds';$('#mute-audio').setAttribute('aria-pressed',audio.muted);}catch{tell('A sound could not resume. Adjust its slider to try again.');}});
 $('#pause-scene').addEventListener('click',()=>{if(!scene)return;scene.motion=!scene.motion;$('#pause-scene').textContent=scene.motion?'Pause motion':'Resume motion';});
 const note=$('#session-note');try{note.value=localStorage.getItem('vishwa-study-note')||'';}catch{}
 note.addEventListener('input',()=>{try{localStorage.setItem('vishwa-study-note',note.value);}catch{tell('Notes will stay here for this visit, but could not be saved on this device.');}});
 $('#focus-mode').addEventListener('click',()=>{const active=document.body.classList.toggle('focus-mode');$('#focus-mode').textContent=active?'Show controls':'Hide controls';$('#focus-mode').setAttribute('aria-pressed',active);});
-window.addEventListener('pagehide',event=>{if(event.persisted){audio.tracks.forEach(t=>t.audio.pause());audio.context?.suspend();}else audio.dispose();});
+const mixer=createMixer({onMood(name){document.querySelector(`[data-mood="${MOODS[name].light}"]`).click();const rain=name==='rain'?.55:0;$('#rainfall').value=rain;if(scene)scene.rain=rain;},async onStart(){await audio.setTrack('lofi',0);$('#lofi-volume').value=0;}});
+window.addEventListener('pagehide',event=>{mixer.stop();if(event.persisted){audio.tracks.forEach(t=>t.audio.pause());audio.context?.suspend();}else{audio.dispose();mixer.dispose();scene?.dispose();}});
 window.addEventListener('pageshow',event=>{if(event.persisted){updateTimer();audio.tracks.forEach((t,name)=>audio.setTrack(name,t.volume).catch(()=>tell('Adjust a sound slider to resume audio.')));}});updateTimer();

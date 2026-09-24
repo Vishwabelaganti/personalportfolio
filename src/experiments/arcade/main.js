@@ -1,5 +1,6 @@
 import { SnakeGame, NumberGame, WordGame } from './engines.js';
 import './style.css';
+import './companion.js';
 const stage=document.querySelector('#arcade-stage');
 const title=document.querySelector('#game-title');
 const hint=document.querySelector('#game-hint');
