@@ -1,21 +1,28 @@
 {
-  "name": "vishwa-3d-portfolio",
-  "version": "2.0.0",
-  "description": "3D Interactive Portfolio Website with Three.js, GSAP, and Particles.js",
+  "name": "vishwa-portfolio",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Vishwa Belaganti \u2014 software, thoughtful interfaces, and interactive experiments.",
+  "author": "Vishwa Belaganti",
+  "license": "MIT",
   "scripts": {
-    "dev": "python3 -m http.server 3000",
-    "start": "python3 -m http.server 8080",
-    "serve": "python3 -m http.server 3000",
-    "dev-node": "npx live-server --port=3000 --open=/index.html"
+    "dev": "vite --host 127.0.0.1",
+    "start": "vite --host 127.0.0.1",
+    "serve": "vite preview --host 127.0.0.1",
+    "build": "vite build && node scripts/copy-assets.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.js bloom/tests/*.test.js"
   },
-  "keywords": [
-    "portfolio",
-    "3d",
-    "interactive",
-    "threejs",
-    "gsap",
-    "particles"
-  ],
-  "author": "Vishwa Karan",
-  "license": "MIT"
+  "dependencies": {
+    "lucide": "0.468.0",
+    "qrcode": "1.5.4",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.9",
+    "jsqr": "1.4.0",
+    "pngjs": "7.0.0",
+    "vite": "6.3.6"
+  }
 }

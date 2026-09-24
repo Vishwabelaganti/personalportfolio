@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#f5f3ee"/>
+<meta name="description" content="A little wonder, sent as a link. Create a living bouquet that unfolds into a floral QR code."/>
+<title>Floral QR · Vishwa Belaganti</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+</head>
+<body>
+<div id="app">
+<header class="header"><a class="portfolio-brand" href="../index.html" aria-label="Vishwa Belaganti portfolio"><span class="vb-mark">vb.</span><span>Vishwa Belaganti<small>PLAYGROUND / FLORAL QR</small></span></a><a class="portfolio-back" href="../playground.html"><i data-lucide="arrow-left"></i> Back to playground</a><div class="header-note gift-header">A LITTLE SOMETHING FOR YOU</div><button class="text-button" id="about-button"><i data-lucide="sparkles"></i> How it works</button></header>
+<main>
+<section class="stage" aria-label="Interactive flower bouquet">
+<div class="stage-heading"><span class="eyebrow">AN INTERACTIVE EXPERIMENT</span><h1>Some links<br>deserve <em>flowers.</em></h1><p>A bouquet with something to share.</p></div>
+<div id="scene" role="button" tabindex="0" aria-label="Bloom the bouquet into a QR code"><div id="loading">Growing something lovely<span>Just a moment…</span></div></div>
+<div class="specimen"><span class="specimen-line"></span><div><span id="specimen-name">Rosa · garden rose</span><small id="specimen-caption">ARRANGEMENT Nº 001</small></div></div>
+<div class="scene-tools"><button id="motion-button" class="icon-button" aria-label="Pause ambient motion" title="Pause ambient motion"><i data-lucide="pause"></i></button><button id="reset-view" class="icon-button" aria-label="Reset bouquet view" title="Reset view"><i data-lucide="rotate-ccw"></i></button></div>
+<div class="stage-bottom"><button id="bloom-button" class="bloom-button"><i data-lucide="sparkles"></i><span>Tap to bloom your link</span><i data-lucide="arrow-up-right"></i></button><span class="stage-hint" id="stage-hint">DRAG TO EXPLORE · CLICK TO TRANSFORM</span></div>
+<div class="scene-state"><span id="mode-number">01</span><div class="mode-line"></div><span id="mode-label">THE BOUQUET</span></div>
+</section>
+<aside class="studio">
+<div class="studio-intro"><span class="eyebrow">MAKE IT YOURS</span><h2>Make it personal.</h2><p>Pick your petals. Tuck in a link.<br>Send a little unexpected joy.</p></div>
+<form id="link-form" novalidate><label for="destination"><span class="step">01</span> Where should it lead?</label><div class="url-input"><i data-lucide="link"></i><input id="destination" type="url" value="https://example.com" placeholder="https://your-lovely-link.com" autocomplete="off" spellcheck="false" maxlength="1000"/><button type="submit" aria-label="Apply destination link" title="Apply link"><i data-lucide="arrow-right"></i></button></div><p id="url-feedback" class="field-help" aria-live="polite">A playlist, a love note, your corner of the internet.</p></form>
+<fieldset class="flower-field"><legend><span class="step">02</span> Choose your bloom</legend><div class="flower-options"><button type="button" class="flower-option active" data-flower="rose" aria-pressed="true"><i data-lucide="sprout"></i><span>Rose</span></button><button type="button" class="flower-option" data-flower="peony" aria-pressed="false"><i data-lucide="flower-2"></i><span>Peony</span></button><button type="button" class="flower-option" data-flower="dahlia" aria-pressed="false"><i data-lucide="flower"></i><span>Dahlia</span></button></div></fieldset>
+<fieldset class="palette-field"><legend><span class="step">03</span> Set the feeling <span id="palette-label">Rosewater</span></legend><div class="palettes"><button class="swatch active" style="--swatch:#b95c75;--light:#f4b7bb" data-palette="rosewater" aria-label="Rosewater palette" aria-pressed="true"></button><button class="swatch" style="--swatch:#cf772e;--light:#ffd099" data-palette="golden" aria-label="Golden hour palette" aria-pressed="false"></button><button class="swatch" style="--swatch:#8072ad;--light:#d5c6ed" data-palette="lavender" aria-label="Lavender palette" aria-pressed="false"></button><button class="swatch" style="--swatch:#bd443b;--light:#fa9990" data-palette="scarlet" aria-label="Scarlet palette" aria-pressed="false"></button><button class="swatch" style="--swatch:#527c98;--light:#b5d7e5" data-palette="blue" aria-label="Blue hour palette" aria-pressed="false"></button></div></fieldset>
+<div class="detail-row"><div><i data-lucide="sparkles"></i><span>A little company<small>Let the butterflies wander</small></span></div><button id="butterfly-toggle" role="switch" aria-checked="true" aria-label="Butterflies" class="switch"><span></span></button></div>
+<div class="actions"><button id="share-button" class="primary-button"><i data-lucide="link"></i> Copy bouquet link <i data-lucide="arrow-up-right"></i></button><button id="download-button" class="secondary-button"><i data-lucide="download"></i> Save floral QR <span>PNG</span></button><a id="destination-link" target="_blank" rel="noopener noreferrer" href="https://example.com" class="destination-link">Open destination <i data-lucide="arrow-up-right"></i></a></div>
+<div class="studio-footnote"><i data-lucide="heart"></i><p>A bouquet that lasts.<br>A little magic that travels.</p></div>
+</aside>
+</main>
+<footer><span>AN EXPERIMENT BY VISHWA BELAGANTI</span><a href="../playground.html">More from my playground <i data-lucide="arrow-up-right"></i></a><span>2026</span></footer>
+<div class="gift-destination"><span>A LITTLE LINK, JUST FOR YOU</span><a id="gift-open-link" target="_blank" rel="noopener noreferrer" href="https://example.com">Open your link <i data-lucide="arrow-up-right"></i></a><p id="gift-url"></p></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="about-dialog"><button id="close-about" class="icon-button close-dialog" aria-label="Close"><i data-lucide="x"></i></button><span class="eyebrow">A LINK, IN FULL BLOOM</span><h2>Give a link<br>a lovely entrance.</h2><ol><li><b>Plant a link.</b> Add any http or https address and choose your flowers.</li><li><b>Watch it bloom.</b> Click the bouquet. The petals arrange into a scannable QR code.</li><li><b>Pass it on.</b> Share the bouquet link, or save the floral QR as an image.</li></ol><p>The bouquet link holds your design. The QR opens your destination. No account needed.</p><button id="about-done" class="primary-button">Let’s make something lovely <i data-lucide="arrow-right"></i></button></dialog>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body></html>
