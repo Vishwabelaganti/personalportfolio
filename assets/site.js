@@ -1,4 +1,5 @@
 import { createIcons, ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces } from 'lucide';
+import { initChatbot } from './chatbot.js';
 const icons = { ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces };
 createIcons({ icons });
 const menu = document.querySelector('.menu-button');
@@ -21,3 +22,4 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(({ target, isIntersecting }) => target.contentWindow?.postMessage({ type: 'portfolio-preview-visibility', visible: isIntersecting }, location.origin));
 });
 document.querySelectorAll('.flower-preview iframe').forEach(frame => observer.observe(frame));
+initChatbot();
