@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCanvas } from '@napi-rs/canvas';
 import jsQR from 'jsqr';
-import { normalizeUrl, createCode, encodeShare, decodeShare, drawQR, PALETTES, FLOWERS } from '../src/qr.js';
+import { normalizeUrl, createCode, encodeShare, decodeShare, drawQR, PALETTES, FLOWERS } from '../src/experiments/flowers/qr.js';
 test('destinations are normalized and unsafe protocols rejected',()=>{
  assert.equal(normalizeUrl('example.com/hello?x=1'),'https://example.com/hello?x=1');
  for(const url of ['javascript:alert(1)','data:text/html,hello','file:///etc/passwd','https://user:secret@example.com',''])assert.throws(()=>normalizeUrl(url));

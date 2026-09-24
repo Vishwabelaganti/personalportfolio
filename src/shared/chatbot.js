@@ -1,3 +1,4 @@
+const portfolioRoot = new URL(document.querySelector('.identity')?.getAttribute('href') || './index.html', location.href);
 /* ─── VishwaBot · portfolio chatbot (redesigned) ─── */
 const STYLES = `
 #vb-chat-fab{position:fixed;bottom:28px;right:28px;z-index:9000;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#9683ad,#7c6b8f);border:none;color:#fff;cursor:pointer;box-shadow:0 4px 20px #7c6b8f44;display:grid;place-items:center;transition:transform .25s,box-shadow .25s}
@@ -38,6 +39,8 @@ class VishwaBot {
   classify(t) {
     const x = t.toLowerCase();
     if (/(hi|hello|hey)\b/.test(x)) return 'greetings';
+    if (/(arcade|snake|pong|hangman|quiz)/.test(x)) return 'arcade';
+    if (/(study|focus|chime)/.test(x)) return 'study';
     if (/(project|work|built)/.test(x)) return 'projects';
     if (/(skill|tech|programming|stack)/.test(x)) return 'skills';
     if (/(school|college|university|education|gpa)/.test(x)) return 'school';
@@ -86,7 +89,7 @@ class VishwaBot {
       case 'school': return "I'm studying Computer Science at Texas Tech University. I'm active in GDSC and CodePath, where I mentor students in web development.";
       case 'contact': return "Reach me at <a href='mailto:vishwa.belaganti@gmail.com'>vishwa.belaganti@gmail.com</a>. I'm also on <a href='https://www.linkedin.com/in/vishwa-belaganti/' target='_blank'>LinkedIn</a> and <a href='https://github.com/Vishwabelaganti' target='_blank'>GitHub</a>.";
       case 'certificates': return "I've earned certifications in Google Cybersecurity, Python, MySQL, and Figma UI/UX. See them on the <a href='certificates.html'>Credentials page</a>.";
-      case 'resume': window.open('files/Vishwa_Belaganti_Resume.pdf', '_blank'); return "Opening resume in a new tab! 📄";
+      case 'resume': window.open(new URL('files/Vishwa_Belaganti_Resume.pdf', portfolioRoot).href, '_blank', 'noopener'); return "Opening resume in a new tab! 📄";
       case 'joke': return await this.joke();
       case 'hobbies': return "When I'm not coding — soccer, gym, drawing, and trying new dessert recipes. Baking is my stress reliever! 🎨⚽";
       case 'music': return "Big fan of Stephan Sanchez, plus lofi beats for coding sessions and ambient rain sounds for focus. 🎵";
@@ -97,6 +100,8 @@ class VishwaBot {
       case 'positive': return "Thanks for the kind words! 😊 Want to explore the <a href='playground.html'>Playground</a> for something interactive?";
       case 'rejection': this.rejectionCount++; return this.rejectionCount >= 2 ? await this.joke() : "Fair enough — how about a quick joke instead?";
       case 'help': return "Try asking about: <b>projects</b>, <b>skills</b>, <b>experience</b>, <b>education</b>, <b>resume</b>, <b>contact</b>, or say <b>joke</b> for a laugh!";
+      case 'arcade': return "The <a href='arcade/'>Arcade</a> has Snake, Pong, Hangman, number guessing, and a quick quiz. Pick a game and have a little break!";
+      case 'study': return "Try the <a href='study/'>Study space</a> for a focus timer, playable wind chimes, and lofi sounds.";
       case 'playground': return "The Playground is where I keep experiments — like the <a href='bloom/'>Floral QR</a> bouquet! Check it out on the <a href='playground.html'>Playground page</a>.";
       case 'experience': return "I'm currently an Automation Intern at CtrlS Datacenters, building CMDB tools and 3D navigation. Before that, I was a Grading Assistant for Data Structures at Texas Tech. More on the <a href='experience.html'>Experience page</a>.";
       default: return "I'm not sure I caught that! Try asking about projects, skills, experience, or say 'help' for ideas.";
@@ -149,7 +154,7 @@ export function initChatbot() {
   function addMsg(text, sender = 'bot') {
     const el = document.createElement('div');
     el.className = `vb-msg ${sender}`;
-    el.innerHTML = text;
+    if(sender==='user') el.textContent=text; else { el.innerHTML=text; el.querySelectorAll('a').forEach(a=>{const href=a.getAttribute('href'); if(href&&!/^(https?:|mailto:|#)/.test(href))a.href=new URL(href,portfolioRoot).href; if(a.target==='_blank')a.rel='noopener noreferrer';}); }
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
   }

@@ -11,9 +11,11 @@ export default defineConfig({
         certificates: resolve('certificates.html'),
         playground: resolve('playground.html'),
         flowers: resolve('bloom/index.html'),
+        arcade: resolve('arcade/index.html'),
+        study: resolve('study/index.html'),
         notFound: resolve('404.html'),
       },
-      output: { manualChunks: { three: ['three'], qr: ['qrcode'] } },
+      output: { manualChunks(id) { if(id.includes('/node_modules/three/')) return 'three'; if(id.includes('/node_modules/qrcode/')) return 'qr'; } },
     },
   },
 });

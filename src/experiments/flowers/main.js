@@ -35,11 +35,11 @@ function applyUrl(){
  catch(error){feedback.textContent=error.message.includes('Invalid URL')?'That link doesn’t look quite right. Try https://example.com.':error.message;feedback.classList.add('error');input.setAttribute('aria-invalid','true');return false;}
 }
 function toggle(){if(isPreview)return;if(!isGift&&!applyUrl())return;qrVisible=!qrVisible;scene?.toggle(qrVisible);document.body.classList.toggle('qr-mode',qrVisible);$('#bloom-button span').textContent=qrVisible?'Gather the bouquet':'Tap to bloom your link';$('#stage-hint').textContent=qrVisible?(isGift?'SCAN WITH YOUR CAMERA · OR TAP THE QR TO OPEN':'SCAN WITH YOUR CAMERA · OR OPEN THE LINK'):'DRAG TO EXPLORE · CLICK TO TRANSFORM';$('#mode-number').textContent=qrVisible?'02':'01';$('#mode-label').textContent=qrVisible?'THE REVEAL':'THE BOUQUET';$('#scene').setAttribute('aria-label',qrVisible?(isGift?'Tap the QR code to open the link':'Gather the QR code into a bouquet'):'Bloom the bouquet into a QR code');}
-$('#scene').addEventListener('click',e=>{if(isGift&&qrVisible){e.stopPropagation();window.open(state.url,'_blank','noopener,noreferrer');}});
+function interactWithBouquet(){if(isGift&&qrVisible){if(!scene||scene.progress>=.99)window.open(state.url,'_blank','noopener,noreferrer');}else toggle();}
 function updateFallback(){const canvas=$('.scene-fallback');if(canvas)drawQR(canvas,code,PALETTES[state.palette],state.flower);}
 function fallback(){scene?.dispose();scene=null;$('#scene').replaceChildren();const canvas=document.createElement('canvas');canvas.className='scene-fallback';canvas.setAttribute('aria-label','Floral QR code');$('#scene').appendChild(canvas);updateFallback();$('#bloom-button').disabled=true;$('#bloom-button span').textContent='Your floral QR is ready';$('#stage-hint').textContent='3D IS UNAVAILABLE HERE · SHARING AND SAVING STILL WORK';$('#loading')?.remove();}
 updateControls(true);refreshIcons();
-try{scene=new BloomScene($('#scene'),code,state,toggle);scene.isPreview=isPreview;$('#loading').remove();if(!scene.motion){setIcon($('#motion-button'),'play');$('#motion-button').setAttribute('aria-label','Resume ambient motion');}}
+try{scene=new BloomScene($('#scene'),code,state,interactWithBouquet);scene.isPreview=isPreview;$('#loading').remove();if(!scene.motion){setIcon($('#motion-button'),'play');$('#motion-button').setAttribute('aria-label','Resume ambient motion');}}
 catch(error){console.error('Could not initialize the flower scene:',error);fallback();}
 $('#scene').addEventListener('renderlost',()=>{fallback();toast('The 3D view stopped. Your floral QR is still available.');});
 $('#link-form').addEventListener('submit',e=>{e.preventDefault();if(applyUrl())toast('Your bouquet has a new destination.');});

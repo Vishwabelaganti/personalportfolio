@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
-import { encodeShare, decodeShare } from '../bloom/src/qr.js';
-const pages=['index.html','projects.html','experience.html','certificates.html','playground.html','bloom/index.html','404.html'];
+import { encodeShare, decodeShare } from '../src/experiments/flowers/qr.js';
+const pages=['index.html','projects.html','experience.html','certificates.html','playground.html','bloom/index.html','arcade/index.html','study/index.html','404.html'];
 test('local page links and source assets resolve, including the flower route', async()=>{
  for(const page of pages){
   const html=await readFile(page,'utf8');
@@ -11,7 +11,7 @@ test('local page links and source assets resolve, including the flower route', a
    if(/^(https?:|mailto:|data:|#)/.test(ref))continue;
    const pathname=decodeURIComponent(ref.split(/[?#]/)[0]);
    const path=resolve(dirname(page),pathname.endsWith('/')?pathname+'index.html':pathname);
-   await assert.doesNotReject(access(path),`${page}: ${ref}`);
+   await assert.doesNotReject(async()=>{try{await access(path);}catch{await access(resolve('public',pathname.replace(/^\.\.\//,'')));}},`${page}: ${ref}`);
   }
  }
 });

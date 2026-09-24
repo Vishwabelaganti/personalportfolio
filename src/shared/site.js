@@ -1,6 +1,6 @@
-import { createIcons, ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces } from 'lucide';
+import { createIcons, ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces, Gamepad2, Move, Type, Hash, Lightbulb } from 'lucide';
 import { initChatbot } from './chatbot.js';
-const icons = { ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces };
+const icons = { ArrowUpRight, ArrowDownRight, ArrowUp, ArrowLeft, MapPin, Asterisk, Menu, X, MousePointer2, Headphones, ShieldCheck, PenTool, Code2, Network, Terminal, ScanLine, LockKeyhole, Braces, Gamepad2, Move, Type, Hash, Lightbulb };
 createIcons({ icons });
 const menu = document.querySelector('.menu-button');
 const nav = document.querySelector('#main-nav');
