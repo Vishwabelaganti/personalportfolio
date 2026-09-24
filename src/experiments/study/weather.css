@@ -1,0 +1,33 @@
+.weather-options {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 22px;
+  position: relative;
+}
+
+.weather-options::before {
+  color: #aaa0b2;
+  content: "WEATHER";
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  position: absolute;
+  top: -13px;
+}
+
+.weather-options button {
+  background: none;
+  border: 1px solid #e1dcea;
+  border-radius: 7px;
+  color: #92859c;
+  flex: 1;
+  font-size: 11px;
+  padding: 8px 5px;
+}
+
+.weather-options button[aria-pressed="true"] {
+  background: #e7ddec;
+  border-color: #bdadc9;
+  color: #786487;
+}
+
+.study-card .mood-options { margin-bottom: 25px; }

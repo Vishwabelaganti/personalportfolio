@@ -1,8 +1,12 @@
 # Study space: asset brief
 
-The study space now uses all eight supplied GLBs: the Japanese arch, wall module, two signs, three lamp/garland props, and flowering branches. The scene scales and positions each model by its world-space bounds. Wind animates the lanterns and branches; falling petals, rain, lighting presets, and playable chimes remain procedural.
+The study space uses six of the supplied GLBs: the Japanese arch, wall module, three lamp/garland props, and flowering branches. The two illuminated sign models remain in the source asset set but are intentionally excluded from the scene so the lanterns provide its visual light. The scene scales and positions each model by its world-space bounds.
 
-Original exports remain untouched in the local `glbfiles/` folder. Run `npm run prepare:models` to regenerate the versioned runtime copies in `src/experiments/study/assets/`. This caps large embedded textures at 1024 px while preserving geometry, materials, transparency, and the GLB axis correction. The eight runtime files total about 16.5 MB, down from 48.6 MB. Vite gives the deployed copies content-hashed URLs. Originals are excluded from Git; only optimized copies ship.
+The supplied garden image fills the view outside the cabin, while the dark plank image is mapped across the floor with repeated texture coordinates. The wall modules, posts, lanterns, chimes, and arch are grouped over that floor to form one centered room. Soft directional shadows ground the geometry, and lantern intensity, background tint, exposure, and ambient lighting follow the day, dusk, and night presets.
+
+Petals, rain, and snow are separate procedural weather modes. Breeze affects the branches, lanterns, chimes, petals, and snow drift; the weather-intensity control changes precipitation speed and opacity.
+
+Original exports remain untouched in the local `glbfiles/` folder. Run `npm run prepare:models` to regenerate the versioned copies in `src/experiments/study/assets/`. This caps large embedded textures at 1024 px while preserving geometry, materials, transparency, and the GLB axis correction. The complete eight-model source set totals about 16.5 MB, down from 48.6 MB; the page imports and deploys only the six models used by the cabin. Vite gives deployed assets content-hashed URLs. Originals are excluded from Git; only optimized copies ship.
 
 The music studio generates eight-bar phrases locally with seventh-chord progressions, chord-tone melodies, swung sixteenth-note timing, synthesized keys/bass/drums, filtered texture, and echo. Four moods supply starting settings. Layer controls work during playback; new phrases enter on the next bar. Users can save/recall settings on their device and render a WAV download. This is an algorithmic music instrument, not a trained music-generation model. The existing Proibe loops remain available separately.
 
@@ -21,4 +25,4 @@ The single highest-impact asset is the **main environment GLB**. It can come fro
 
 Keep detailed architecture in one environment model and interactive props as separate objects. The existing controls call `setMood`, `strike`, and the audio mixer independently, so replacing the visual scene does not require rebuilding the study tools.
 
-The imported props form a stylized terrace. A complete authored landscape and higher-detail architecture would support a future pass toward the reference-quality temple scene.
+The imported props and supplied images now form a complete stylized cabin terrace rather than a blank procedural backdrop.

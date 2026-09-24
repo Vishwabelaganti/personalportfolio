@@ -6,8 +6,6 @@ import branch from './assets/BranchFlowers01_Art.glb?url';
 import lamp from './assets/Lamp04.glb?url';
 import outer from './assets/OutterLamp.glb?url';
 import wreath from './assets/LampWreath.glb?url';
-import sign from './assets/Japanese_Sign_02.glb?url';
-import smallSign from './assets/Japanese_Sign_03.glb?url';
 
 export function disposeModels(root) {
   const geometries=new Set(), materials=new Set(), textures=new Set();
@@ -28,10 +26,10 @@ export function placeModel(source,{width,height,at,rotation=0}) {
 
 export async function loadStudyModels(onProgress) {
   const loader=new GLTFLoader();let completed=0;
-  const sources={arch,wall,branch,lamp,outer,wreath,sign,smallSign};
+  const sources={arch,wall,branch,lamp,outer,wreath},total=Object.keys(sources).length;
   const entries=await Promise.all(Object.entries(sources).map(async([name,url])=>{
-    try {const gltf=await loader.loadAsync(url);gltf.scene.traverse(o=>{if(!o.isMesh)return;(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.transparent){m.alphaTest=.15;m.depthWrite=true;}});});return[name,gltf.scene];}
+    try {const gltf=await loader.loadAsync(url);gltf.scene.traverse(o=>{if(!o.isMesh)return;o.castShadow=true;o.receiveShadow=true;(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.transparent){m.alphaTest=.15;m.depthWrite=true;}m.envMapIntensity=.65;});});return[name,gltf.scene];}
     catch(error){console.warn(`Study prop unavailable: ${name}`,error);return[name,null];}
-    finally{onProgress?.(++completed,8);}
+    finally{onProgress?.(++completed,total);}
   }));return Object.fromEntries(entries);
 }

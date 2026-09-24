@@ -4,10 +4,13 @@ import { FocusTimer } from './timer.js';
 import { createMixer } from './mixer-ui.js';
 import { MOODS } from './composition.js';
 import './style.css';
+import './weather.css';
 const $=s=>document.querySelector(s);
 const timer=new FocusTimer();const audio=new StudyAudio(new URL('../audio/',location.href));let scene;
 const loadStatus=document.createElement('span');loadStatus.id='scene-load-status';loadStatus.className='scene-load-status';loadStatus.setAttribute('role','status');loadStatus.textContent='Arranging the courtyard…';$('.study-view').append(loadStatus);
 const lofiLabel=document.querySelector('label[for="lofi-volume"]');lofiLabel.firstChild.textContent='Lofi loop';
+const weather=document.createElement('div');weather.className='weather-options';weather.setAttribute('aria-label','Weather');weather.innerHTML='<button data-weather="petals" aria-pressed="true">Petals</button><button data-weather="rain" aria-pressed="false">Rain</button><button data-weather="snow" aria-pressed="false">Snow</button>';document.querySelector('.mood-options').after(weather);
+const weatherLabel=document.querySelector('label[for="rainfall"]');weatherLabel.firstChild.textContent='Weather intensity';$('#rainfall').value='.55';
 $('.study-heading .eyebrow').textContent='PLAYGROUND / STUDY SPACE';
 $('.study-heading h1+p').textContent='A quiet courtyard. A soundtrack of your own. A little room to focus.';
 function tell(text){$('#study-status').textContent=text;}
@@ -16,7 +19,8 @@ try{scene=new StudyScene($('#study-scene'),strike);}catch(error){$('#study-scene
 document.querySelectorAll('[data-note]').forEach(b=>b.addEventListener('click',()=>strike(Number(b.dataset.note))));
 document.querySelectorAll('[data-mood]').forEach(b=>b.addEventListener('click',()=>{scene?.setMood(b.dataset.mood);document.querySelectorAll('[data-mood]').forEach(el=>el.setAttribute('aria-pressed',el===b));$('#mood-name').textContent=b.textContent;}));
 $('#wind').addEventListener('input',e=>{if(scene)scene.wind=Number(e.target.value);});
-$('#rainfall').addEventListener('input',e=>{if(scene)scene.rain=Number(e.target.value);});
+$('#rainfall').addEventListener('input',e=>scene?.setWeather(scene.weather,Number(e.target.value)));
+document.querySelectorAll('[data-weather]').forEach(button=>button.addEventListener('click',()=>{scene?.setWeather(button.dataset.weather,Number($('#rainfall').value));document.querySelectorAll('[data-weather]').forEach(el=>el.setAttribute('aria-pressed',el===button));tell(`${button.textContent} weather selected.`);}));
 function updateTimer(){const finished=timer.tick();$('#timer-display').textContent=timer.label;$('#timer-toggle').textContent=timer.running?'Pause session':timer.remaining?'Start focus session':'Session complete';$('#timer-toggle').disabled=!timer.remaining;if(finished){tell('Session complete. Take a breath and a short break.');audio.chime(0,.12).catch(()=>{});}}
 $('#timer-toggle').addEventListener('click',()=>{timer.running?timer.pause():timer.start();updateTimer();});
 $('#timer-reset').addEventListener('click',()=>{timer.reset();updateTimer();tell('Timer reset. Begin when you’re ready.');});
@@ -28,6 +32,6 @@ $('#pause-scene').addEventListener('click',()=>{if(!scene)return;scene.motion=!s
 const note=$('#session-note');try{note.value=localStorage.getItem('vishwa-study-note')||'';}catch{}
 note.addEventListener('input',()=>{try{localStorage.setItem('vishwa-study-note',note.value);}catch{tell('Notes will stay here for this visit, but could not be saved on this device.');}});
 $('#focus-mode').addEventListener('click',()=>{const active=document.body.classList.toggle('focus-mode');$('#focus-mode').textContent=active?'Show controls':'Hide controls';$('#focus-mode').setAttribute('aria-pressed',active);});
-const mixer=createMixer({onMood(name){document.querySelector(`[data-mood="${MOODS[name].light}"]`).click();const rain=name==='rain'?.55:0;$('#rainfall').value=rain;if(scene)scene.rain=rain;},async onStart(){await audio.setTrack('lofi',0);$('#lofi-volume').value=0;}});
+const mixer=createMixer({onMood(name){document.querySelector(`[data-mood="${MOODS[name].light}"]`).click();document.querySelector(`[data-weather="${name==='rain'?'rain':'petals'}"]`).click();},async onStart(){await audio.setTrack('lofi',0);$('#lofi-volume').value=0;}});
 window.addEventListener('pagehide',event=>{mixer.stop();if(event.persisted){audio.tracks.forEach(t=>t.audio.pause());audio.context?.suspend();}else{audio.dispose();mixer.dispose();scene?.dispose();}});
 window.addEventListener('pageshow',event=>{if(event.persisted){updateTimer();audio.tracks.forEach((t,name)=>audio.setTrack(name,t.volume).catch(()=>tell('Adjust a sound slider to resume audio.')));}});updateTimer();
