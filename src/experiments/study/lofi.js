@@ -36,7 +36,8 @@ export class LofiEngine {
     this.configure({mood,seed,bpm:preset.bpm,swing:preset.swing,warmth:preset.warmth,space:preset.space,melody:preset.melody});
     this.queuePattern();
   }
-  queuePattern() {const pattern=compose(this.settings.mood,this.settings.seed);if(this.running)this.pending=pattern;else this.pattern=pattern;}
+  setArrangement(pattern) {this.arrangement=structuredClone(pattern);this.queuePattern();}
+  queuePattern() {const pattern=this.arrangement||compose(this.settings.mood,this.settings.seed);if(this.running)this.pending=pattern;else this.pattern=pattern;}
   track(source,nodes,end) {
     this.sources.add(source);source.onended=()=>{source.disconnect();nodes.forEach(n=>n.disconnect());this.sources.delete(source);};source.stop(end);
   }
@@ -78,7 +79,7 @@ export class LofiEngine {
     }
   }
   async start(){
-    await this.init();if(this.running)return;this.running=true;this.step=0;this.pattern=this.pending||compose(this.settings.mood,this.settings.seed);this.pending=null;this.nextTime=this.context.currentTime+.06;
+    await this.init();if(this.running)return;this.running=true;this.step=0;this.pattern=this.pending||this.arrangement||compose(this.settings.mood,this.settings.seed);this.pending=null;this.nextTime=this.context.currentTime+.06;
     this.texture=this.context.createBufferSource();this.texture.buffer=this.noise;this.texture.loop=true;
     const gain=this.context.createGain();gain.gain.value=.035;this.texture.connect(gain);gain.connect(this.buses.texture);this.texture.start();this.textureGain=gain;
     this.apply();this.schedule();this.interval=setInterval(()=>this.schedule(),25);
@@ -93,7 +94,7 @@ export class LofiEngine {
     const seconds=32*60/this.settings.bpm+3,sampleRate=44100;
     const context=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate);
     const render=new LofiEngine();render.settings={...this.settings};render.running=true;await render.init(context);
-    let time=.05;const pattern=compose(this.settings.mood,this.settings.seed);
+    let time=.05;const pattern=this.arrangement||compose(this.settings.mood,this.settings.seed);
     pattern.forEach((events,step)=>{events.forEach(event=>{const duration=(event.duration||1)*60/this.settings.bpm;if(event.notes)event.notes.forEach((note,i)=>render.tone(note,time+i*.008,duration,event.voice,event.velocity));else render.percussion(event.voice,time,event.velocity);});time+=stepDuration(this.settings.bpm,this.settings.swing,step);});
     const texture=context.createBufferSource();texture.buffer=render.noise;texture.loop=true;const gain=context.createGain();gain.gain.value=.035;texture.connect(gain);gain.connect(render.buses.texture);texture.start();texture.stop(seconds);
     render.master.gain.setTargetAtTime(0,seconds-1,.2);

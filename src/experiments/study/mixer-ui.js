@@ -1,6 +1,7 @@
 import { LofiEngine } from './lofi.js';
 import { MOODS, sanitizeMix } from './composition.js';
 import './mixer.css';
+import { createArranger } from './arranger-ui.js';
 
 export function createMixer({onMood,onStart}) {
   const section=document.createElement('section');section.className='lofi-studio wrap';section.setAttribute('aria-label','Make your own lofi');
@@ -11,6 +12,7 @@ export function createMixer({onMood,onStart}) {
   const status=section.querySelector('#lofi-status'),play=section.querySelector('#lofi-play');
   const exportButton=document.createElement('button');exportButton.className='text-link';exportButton.textContent='Download WAV';section.querySelector('.lofi-save').prepend(exportButton);
   const engine=new LofiEngine((bar,step)=>{if(step%4===0)section.querySelector('#lofi-position').textContent=`Bar ${bar} / 8 · Beat ${Math.floor(step/4)+1}`;});
+  const arranger=createArranger(section,engine,status);
   function display(){
     section.querySelectorAll('[data-mix]').forEach(input=>{const key=input.dataset.mix;input.value=engine.settings[key];section.querySelector(`#out-${key}`).textContent=key==='bpm'?`${input.value} BPM`:`${Math.round(input.value*100)}%`;});
     section.querySelectorAll('[data-lofi-mood]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lofiMood===engine.settings.mood));
@@ -19,12 +21,12 @@ export function createMixer({onMood,onStart}) {
   function playing(){play.textContent=engine.running?'Pause my mix':'Play my mix';play.setAttribute('aria-pressed',engine.running);section.classList.toggle('is-playing',engine.running);if(!engine.running)section.querySelector('#lofi-position').textContent='Paused';}
   function matchScene(){if(section.querySelector('#mix-link-scene').checked)onMood(engine.settings.mood);}
   play.addEventListener('click',async()=>{play.disabled=true;try{if(engine.running)engine.stop();else{await onStart();await engine.start();}playing();status.textContent=engine.running?'Your mix is playing. Adjust the layers to taste.':'Mix paused.';}catch(error){engine.stop();playing();status.textContent='Audio could not start. Press Play to try again.';console.warn(error);}finally{play.disabled=false;}});
-  section.querySelectorAll('[data-lofi-mood]').forEach(button=>button.addEventListener('click',()=>{engine.setMood(button.dataset.lofiMood);display();matchScene();status.textContent=engine.running?'New mood joins on the next bar.':'Mood ready. Press Play to listen.';}));
+  section.querySelectorAll('[data-lofi-mood]').forEach(button=>button.addEventListener('click',()=>{engine.setMood(button.dataset.lofiMood);arranger.regenerate();display();matchScene();status.textContent=engine.running?'New mood joins on the next bar.':'Mood ready. Press Play to listen.';}));
   section.querySelectorAll('[data-mix]').forEach(input=>input.addEventListener('input',()=>{engine.configure({[input.dataset.mix]:Number(input.value)});display();}));
-  section.querySelector('#lofi-variation').addEventListener('click',()=>{engine.configure({seed:Math.floor(Math.random()*2147483646)+1});engine.queuePattern();status.textContent=engine.running?'Fresh phrase queued for the next bar.':'Fresh phrase ready. Press Play to listen.';});
+  section.querySelector('#lofi-variation').addEventListener('click',()=>{engine.configure({seed:Math.floor(Math.random()*2147483646)+1});arranger.regenerate();status.textContent=engine.running?'Fresh phrase queued for the next bar.':'Fresh phrase ready. Press Play to listen.';});
   section.querySelector('#mix-link-scene').addEventListener('change',matchScene);
-  section.querySelector('#lofi-save').addEventListener('click',()=>{try{localStorage.setItem('vishwa-lofi-mix',JSON.stringify(engine.settings));status.textContent='Your mix is saved on this device.';}catch{status.textContent='This browser could not save the mix.';}});
-  section.querySelector('#lofi-recall').addEventListener('click',()=>{try{const saved=localStorage.getItem('vishwa-lofi-mix');if(!saved){status.textContent='No saved mix yet. Make one and tap Save.';return;}engine.configure(sanitizeMix(JSON.parse(saved)));engine.queuePattern();display();matchScene();status.textContent='Saved mix restored.';}catch{status.textContent='The saved mix could not be read.';}});
+  section.querySelector('#lofi-save').addEventListener('click',()=>{try{localStorage.setItem('vishwa-lofi-mix',JSON.stringify({...engine.settings,arrangement:engine.arrangement}));status.textContent='Your mix and edited bars are saved on this device.';}catch{status.textContent='This browser could not save the mix.';}});
+  section.querySelector('#lofi-recall').addEventListener('click',()=>{try{const saved=localStorage.getItem('vishwa-lofi-mix');if(!saved){status.textContent='No saved mix yet. Make one and tap Save.';return;}const value=JSON.parse(saved);engine.configure(sanitizeMix(value));arranger.restore(value.arrangement);display();matchScene();status.textContent='Saved mix restored.';}catch{status.textContent='The saved mix could not be read.';}});
   exportButton.addEventListener('click',async()=>{exportButton.disabled=true;status.textContent='Rendering your eight-bar mix…';try{const result=await engine.exportWav();const url=URL.createObjectURL(result.blob),a=document.createElement('a');a.href=url;a.download=`${engine.settings.mood}-lofi-${engine.settings.seed}.wav`;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);status.textContent=`Your ${Math.round(result.seconds)}-second mix is ready. Downloaded as WAV.`;status.dataset.audioPeak=result.peak.toFixed(5);status.dataset.audioRms=result.rms.toFixed(5);}catch(error){status.textContent='The mix could not be exported. Try again in a moment.';console.warn(error);}finally{exportButton.disabled=false;}});
   return {engine,stop(){engine.stop();playing();},dispose(){engine.dispose();}};
 }
