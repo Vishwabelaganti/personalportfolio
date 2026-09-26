@@ -11,10 +11,10 @@ export class LofiEngine {
       this.filter=c.createBiquadFilter();this.filter.type='lowpass';
       this.compressor=c.createDynamicsCompressor();this.compressor.threshold.value=-18;this.compressor.ratio.value=4;
       this.filter.connect(this.compressor);this.compressor.connect(this.master);this.master.connect(c.destination);
-      this.buses={};for(const name of ['keys','bass','drums','melody','texture']){this.buses[name]=c.createGain();this.buses[name].connect(this.filter);}
+      this.buses={};for(const name of ['keys','rhodes','guitar','sax','bass','drums','melody','texture']){this.buses[name]=c.createGain();this.buses[name].connect(this.filter);}
       this.delay=c.createDelay(2);this.feedback=c.createGain();this.wet=c.createGain();
       this.delay.delayTime.value=.39;this.feedback.gain.value=.22;
-      this.buses.keys.connect(this.delay);this.buses.melody.connect(this.delay);this.delay.connect(this.feedback);this.feedback.connect(this.delay);this.delay.connect(this.wet);this.wet.connect(this.filter);
+      for(const name of ['keys','rhodes','guitar','sax','melody'])this.buses[name].connect(this.delay);this.delay.connect(this.feedback);this.feedback.connect(this.delay);this.delay.connect(this.wet);this.wet.connect(this.filter);
       this.noise=c.createBuffer(1,c.sampleRate*2,c.sampleRate);const data=this.noise.getChannelData(0);
       let brown=0;for(let i=0;i<data.length;i++){brown=(brown+(Math.random()*2-1)*.02)/1.02;data[i]=brown*3.5;}
       this.drumNoise=c.createBuffer(1,c.sampleRate,c.sampleRate);const drum=this.drumNoise.getChannelData(0);for(let i=0;i<drum.length;i++)drum[i]=Math.random()*2-1;
@@ -43,13 +43,20 @@ export class LofiEngine {
   }
   tone(note,time,duration,voice,velocity) {
     const c=this.context;
-    // A soft fundamental plus a detuned partial gives an electric-piano-like attack.
-    const partials=voice==='bass'?[[1,1,'sine']]:[[1,.78,'sine'],[2,.16,'sine'],[3,.035,'triangle']];
+    const voices={
+      bass:{partials:[[1,1,'sine']],amp:.22,attack:.012,release:1},
+      rhodes:{partials:[[1,.7,'sine'],[2,.2,'sine'],[3,.07,'triangle'],[6,.025,'sine']],amp:.105,attack:.008,release:1.25},
+      guitar:{partials:[[1,.62,'triangle'],[2,.22,'sine'],[3,.1,'triangle'],[4,.035,'sine']],amp:.12,attack:.004,release:.62},
+      sax:{partials:[[1,.55,'sawtooth'],[2,.18,'triangle'],[3,.06,'sine']],amp:.07,attack:.075,release:1.08},
+      melody:{partials:[[1,.78,'sine'],[2,.16,'sine'],[3,.035,'triangle']],amp:.09,attack:.012,release:1},
+      keys:{partials:[[1,.78,'sine'],[2,.16,'sine'],[3,.035,'triangle']],amp:.09,attack:.012,release:1},
+    },style=voices[voice]||voices.keys,partials=style.partials;
     partials.forEach(([harmonic,level,type],i)=>{
       const oscillator=c.createOscillator(),envelope=c.createGain();oscillator.type=type;oscillator.frequency.value=frequency(note)*harmonic;oscillator.detune.value=i?Math.sin(note)*3:0;
-      const amp=velocity*level*(voice==='bass'?.22:voice==='melody'?.09:.09);
-      envelope.gain.setValueAtTime(0,time);envelope.gain.linearRampToValueAtTime(amp,time+.012);envelope.gain.exponentialRampToValueAtTime(.0001,time+duration);
-      oscillator.connect(envelope);envelope.connect(this.buses[voice]);oscillator.start(time);this.track(oscillator,[envelope],time+duration+.02);
+      if(voice==='sax')oscillator.detune.setValueAtTime(-4+Math.sin(note)*2,time);
+      const amp=velocity*level*style.amp,end=time+Math.max(.12,duration*style.release);
+      envelope.gain.setValueAtTime(.0001,time);envelope.gain.linearRampToValueAtTime(amp,time+style.attack);envelope.gain.exponentialRampToValueAtTime(.0001,end);
+      oscillator.connect(envelope);envelope.connect(this.buses[voice]);oscillator.start(time);this.track(oscillator,[envelope],end+.02);
     });
   }
   percussion(voice,time,velocity) {

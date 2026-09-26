@@ -4,6 +4,13 @@ export const MOODS = {
   rain: { label: 'Rainy window', bpm: 68, root: 55, chords: [[0,3,7,10],[5,8,12,15],[8,12,15,19],[3,7,10,14]], swing: .2, warmth: .78, space: .5, melody: .28, light: 'dusk' },
   night: { label: 'After midnight', bpm: 62, root: 54, chords: [[0,3,7,10],[8,12,15,19],[5,8,12,15],[7,10,14,17]], swing: .23, warmth: .84, space: .6, melody: .23, light: 'night' },
 };
+export const CHARACTERS = {
+  classic: {label:'Classic lofi',keys:.65,rhodes:.32,guitar:.24,sax:.14,melody:.32},
+  jazz: {label:'Late-night jazz',keys:.3,rhodes:.72,guitar:.08,sax:.42,melody:.12},
+  guitar: {label:'Mellow guitar',keys:.18,rhodes:.16,guitar:.78,sax:0,melody:.18},
+  lounge: {label:'Rhodes lounge',keys:.12,rhodes:.82,guitar:.14,sax:.12,melody:.16},
+  blue: {label:'Blue-hour sax',keys:.22,rhodes:.48,guitar:.08,sax:.68,melody:.08},
+};
 export function randomSource(seed) {
   let value=seed>>>0;
   return()=>{value+=0x6D2B79F5;let n=value;n=Math.imul(n^(n>>>15),n|1);n^=n+Math.imul(n^(n>>>7),n|61);return((n^(n>>>14))>>>0)/4294967296;};
@@ -32,5 +39,5 @@ export function compose(mood='warm', seed=1) {
 
 export function sanitizeMix(value={}) {
   const clamp=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.min(max,Math.max(min,Number(v))):fallback;
-  return {mood:MOODS[value.mood]?value.mood:'warm',seed:clamp(value.seed,1,2147483647,1),bpm:clamp(value.bpm,55,95,76),swing:clamp(value.swing,0,.35,.15),warmth:clamp(value.warmth,0,1,.6),space:clamp(value.space,0,.8,.35),keys:clamp(value.keys,0,1,.65),bass:clamp(value.bass,0,1,.5),drums:clamp(value.drums,0,1,.48),melody:clamp(value.melody,0,1,.32),texture:clamp(value.texture,0,1,.12),volume:clamp(value.volume,0,1,.65)};
+  return {mood:MOODS[value.mood]?value.mood:'warm',seed:clamp(value.seed,1,2147483647,1),bpm:clamp(value.bpm,55,95,76),swing:clamp(value.swing,0,.35,.15),warmth:clamp(value.warmth,0,1,.6),space:clamp(value.space,0,.8,.35),keys:clamp(value.keys,0,1,.65),rhodes:clamp(value.rhodes,0,1,.32),guitar:clamp(value.guitar,0,1,.24),sax:clamp(value.sax,0,1,.14),bass:clamp(value.bass,0,1,.5),drums:clamp(value.drums,0,1,.48),melody:clamp(value.melody,0,1,.32),texture:clamp(value.texture,0,1,.12),volume:clamp(value.volume,0,1,.65)};
 }

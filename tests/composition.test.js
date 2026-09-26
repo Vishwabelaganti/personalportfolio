@@ -23,8 +23,8 @@ test('swing preserves exact bar length across supported tempos',()=>{
   }
 });
 test('stored mixer settings cannot escape safe control ranges',()=>{
-  const mix=sanitizeMix({mood:'invalid',bpm:999,volume:-1,space:Infinity,keys:'bad'});
-  assert.equal(mix.mood,'warm');assert.equal(mix.bpm,95);assert.equal(mix.volume,0);assert.equal(mix.space,.35);assert.equal(mix.keys,.65);
+  const mix=sanitizeMix({mood:'invalid',bpm:999,volume:-1,space:Infinity,keys:'bad',guitar:5,sax:-2});
+  assert.equal(mix.mood,'warm');assert.equal(mix.bpm,95);assert.equal(mix.volume,0);assert.equal(mix.space,.35);assert.equal(mix.keys,.65);assert.equal(mix.guitar,1);assert.equal(mix.sax,0);assert.equal(mix.rhodes,.32);
 });
 test('optimized GLBs retain valid buffers and embedded textures',async()=>{
   const dir='src/experiments/study/assets',files=(await readdir(dir)).filter(f=>f.endsWith('.glb'));assert.equal(files.length,8);
