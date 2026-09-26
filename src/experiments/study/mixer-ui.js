@@ -11,8 +11,8 @@ export function createMixer({onMood,onStart}) {
   document.querySelector('.study-bottom').before(section);
   const status=section.querySelector('#lofi-status'),play=section.querySelector('#lofi-play');
   const exportButton=document.createElement('button');exportButton.className='text-link';exportButton.textContent='Download WAV';section.querySelector('.lofi-save').prepend(exportButton);
-  const engine=new LofiEngine((bar,step)=>{if(step%4===0)section.querySelector('#lofi-position').textContent=`Bar ${bar} / 8 · Beat ${Math.floor(step/4)+1}`;});
-  const arranger=createArranger(section,engine,status);
+  let arranger;const engine=new LofiEngine((bar,step)=>{if(step%4===0)section.querySelector('#lofi-position').textContent=`Bar ${bar} / 8 · Beat ${Math.floor(step/4)+1}`;arranger?.setPlayhead(bar,step);});
+  arranger=createArranger(section,engine,status);
   function display(){
     section.querySelectorAll('[data-mix]').forEach(input=>{const key=input.dataset.mix;input.value=engine.settings[key];section.querySelector(`#out-${key}`).textContent=key==='bpm'?`${input.value} BPM`:`${Math.round(input.value*100)}%`;});
     section.querySelectorAll('[data-lofi-mood]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lofiMood===engine.settings.mood));
@@ -20,6 +20,7 @@ export function createMixer({onMood,onStart}) {
   }
   section.addEventListener('mixchange',display);
   function playing(){play.textContent=engine.running?'Pause my mix':'Play my mix';play.setAttribute('aria-pressed',engine.running);section.classList.toggle('is-playing',engine.running);if(!engine.running)section.querySelector('#lofi-position').textContent='Paused';}
+  section.addEventListener('mixplaystate',playing);
   function matchScene(){if(section.querySelector('#mix-link-scene').checked)onMood(engine.settings.mood);}
   play.addEventListener('click',async()=>{play.disabled=true;try{if(engine.running)engine.stop();else{await onStart();await engine.start();}playing();status.textContent=engine.running?'Your mix is playing. Adjust the layers to taste.':'Mix paused.';}catch(error){engine.stop();playing();status.textContent='Audio could not start. Press Play to try again.';console.warn(error);}finally{play.disabled=false;}});
   section.querySelectorAll('[data-lofi-mood]').forEach(button=>button.addEventListener('click',()=>{engine.setMood(button.dataset.lofiMood);arranger.regenerate();display();matchScene();status.textContent=engine.running?'New mood joins on the next bar.':'Mood ready. Press Play to listen.';}));

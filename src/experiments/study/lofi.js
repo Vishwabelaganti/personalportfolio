@@ -36,8 +36,8 @@ export class LofiEngine {
     this.configure({mood,seed,bpm:preset.bpm,swing:preset.swing,warmth:preset.warmth,space:preset.space,melody:preset.melody});
     this.queuePattern();
   }
-  setArrangement(pattern) {this.arrangement=structuredClone(pattern);this.queuePattern();}
-  queuePattern() {const pattern=this.arrangement||compose(this.settings.mood,this.settings.seed);if(this.running)this.pending=pattern;else this.pattern=pattern;}
+  setArrangement(pattern,focusBar=null) {this.arrangement=structuredClone(pattern);this.queuePattern(focusBar);}
+  queuePattern(focusBar=null) {const pattern=this.arrangement||compose(this.settings.mood,this.settings.seed);if(this.running){this.pending=pattern;if(Number.isInteger(focusBar))this.pendingStep=Math.max(0,Math.min(7,focusBar))*16;}else this.pattern=pattern;}
   track(source,nodes,end) {
     this.sources.add(source);source.onended=()=>{source.disconnect();nodes.forEach(n=>n.disconnect());this.sources.delete(source);};source.stop(end);
   }
@@ -75,7 +75,7 @@ export class LofiEngine {
     // Background throttling must not release a backlog of notes when the tab returns.
     if(this.nextTime<c.currentTime-.15)this.nextTime=c.currentTime+.04;
     while(this.nextTime<c.currentTime+.12){
-      if(this.step%16===0&&this.pending){this.pattern=this.pending;this.pending=null;}
+      if(this.step%16===0&&this.pending){this.pattern=this.pending;this.pending=null;if(Number.isInteger(this.pendingStep)){this.step=this.pendingStep;this.pendingStep=null;}}
       for(const event of this.pattern[this.step]){
         const duration=(event.duration||1)*60/this.settings.bpm;
         if(event.notes)event.notes.forEach((note,i)=>this.tone(note,this.nextTime+i*.008,duration,event.voice,event.velocity));
@@ -85,8 +85,8 @@ export class LofiEngine {
       this.nextTime+=stepDuration(this.settings.bpm,this.settings.swing,this.step);this.step=(this.step+1)%128;
     }
   }
-  async start(){
-    await this.init();if(this.running)return;this.running=true;this.step=0;this.pattern=this.pending||this.arrangement||compose(this.settings.mood,this.settings.seed);this.pending=null;this.nextTime=this.context.currentTime+.06;
+  async start(startBar=0){
+    await this.init();if(this.running)return;this.running=true;this.step=Math.max(0,Math.min(7,startBar))*16;this.pattern=this.pending||this.arrangement||compose(this.settings.mood,this.settings.seed);this.pending=null;this.pendingStep=null;this.nextTime=this.context.currentTime+.06;
     this.texture=this.context.createBufferSource();this.texture.buffer=this.noise;this.texture.loop=true;
     const gain=this.context.createGain();gain.gain.value=.035;this.texture.connect(gain);gain.connect(this.buses.texture);this.texture.start();this.textureGain=gain;
     this.apply();this.schedule();this.interval=setInterval(()=>this.schedule(),25);
@@ -94,7 +94,7 @@ export class LofiEngine {
   stop(){
     if(!this.context)return;this.running=false;clearInterval(this.interval);this.master.gain.cancelScheduledValues(this.context.currentTime);this.master.gain.setTargetAtTime(0,this.context.currentTime,.025);
     this.sources.forEach(source=>{try{source.stop(this.context.currentTime+.12);}catch{}});
-    if(this.texture){this.texture.stop();this.texture.disconnect();this.textureGain.disconnect();this.texture=null;}
+    this.pendingStep=null;if(this.texture){this.texture.stop();this.texture.disconnect();this.textureGain.disconnect();this.texture=null;}
   }
   mute(value){this.muted=value;this.apply();}
   async exportWav(){

@@ -3,3 +3,4 @@
 .study-immersive{overflow:hidden}.study-view.is-immersive{position:fixed;inset:0;z-index:10000;width:100vw;height:100dvh;max-height:none;border-radius:0;margin:0}.study-view.is-immersive #study-scene{width:100%;height:100%}
 .arranger,.lofi-desk{min-width:0}.arranger-heading>div{min-width:200px}.bar-timeline button,.tune-shelf button{cursor:pointer}.tune-shelf button:active{cursor:grabbing}.arranger-heading{flex-wrap:wrap}
 .tune-shelf{display:grid;grid-template-columns:repeat(4,1fr)}.tune-shelf button{min-width:0}@media(max-width:800px){.tune-shelf{grid-template-columns:repeat(2,1fr)}}
+.bar-timeline button.is-playing{box-shadow:0 0 0 2px #5f536b,0 7px 20px #69547820}.step-grid button.is-playing{box-shadow:inset 3px 0 #5f536b}.step-grid button[aria-pressed=true].is-playing{box-shadow:inset 3px 0 #fff9,0 0 0 2px #5f536b}
