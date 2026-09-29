@@ -25,7 +25,7 @@ test('shared bouquets explicitly request the recipient view and preserve GitHub 
 });
 test('flower experience carries the portfolio identity',async()=>{
  const html=await readFile('bloom/index.html','utf8');
- assert.match(html,/<title>Floral QR · Vishwa Belaganti<\/title>/);
+ assert.match(html,/<title>Bloom · Vishwa Belaganti<\/title>/);
  assert.match(html,/\.\.\/playground.html/);
  assert.doesNotMatch(html,/TypingMind|Ann Nguyen|Bloom home|bloom<span/);
 });

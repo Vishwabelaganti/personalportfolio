@@ -37,7 +37,9 @@ export function compose(mood='warm', seed=1) {
   return pattern;
 }
 
+export const INSTRUMENTS = ['keys','rhodes','guitar','strings','sax','bass','drums','melody'];
 export function sanitizeMix(value={}) {
   const clamp=(v,min,max,fallback)=>Number.isFinite(Number(v))?Math.min(max,Math.max(min,Number(v))):fallback;
-  return {mood:MOODS[value.mood]?value.mood:'warm',seed:clamp(value.seed,1,2147483647,1),bpm:clamp(value.bpm,55,95,76),swing:clamp(value.swing,0,.35,.15),warmth:clamp(value.warmth,0,1,.6),space:clamp(value.space,0,.8,.35),keys:clamp(value.keys,0,1,.65),rhodes:clamp(value.rhodes,0,1,.32),guitar:clamp(value.guitar,0,1,.24),sax:clamp(value.sax,0,1,.14),bass:clamp(value.bass,0,1,.5),drums:clamp(value.drums,0,1,.48),melody:clamp(value.melody,0,1,.32),texture:clamp(value.texture,0,1,.12),volume:clamp(value.volume,0,1,.65)};
+  const instruments=Object.fromEntries(INSTRUMENTS.map(name=>{const v=value.instruments?.[name]||{};return [name,{sustain:clamp(v.sustain,0,1,name==='strings'?.8:.55),tone:clamp(v.tone,0,1,.5),reverb:clamp(v.reverb,0,1,['guitar','strings'].includes(name)?.3:.12)}];}));
+  return {instruments,strings:clamp(value.strings,0,1,.25),mood:MOODS[value.mood]?value.mood:'warm',seed:clamp(value.seed,1,2147483647,1),bpm:clamp(value.bpm,55,95,76),swing:clamp(value.swing,0,.35,.15),warmth:clamp(value.warmth,0,1,.6),space:clamp(value.space,0,.8,.35),keys:clamp(value.keys,0,1,.65),rhodes:clamp(value.rhodes,0,1,.32),guitar:clamp(value.guitar,0,1,.24),sax:clamp(value.sax,0,1,.14),bass:clamp(value.bass,0,1,.5),drums:clamp(value.drums,0,1,.48),melody:clamp(value.melody,0,1,.32),texture:clamp(value.texture,0,1,.12),volume:clamp(value.volume,0,1,.65)};
 }

@@ -14,3 +14,11 @@ test('character recipes create their named instrument voices',()=>{
  assert.ok(makeBar('warm',2,'sax',0).flat().some(e=>e.voice==='sax'));
 });
 test('saved arrangement validation rejects malformed or unsafe note values',()=>{assert.equal(validArrangement([]),false);const pattern=newArrangement('rain',1);pattern[0].push({voice:'keys',notes:[Infinity],duration:1,velocity:.5});assert.equal(validArrangement(pattern),false);assert.ok(validArrangement(Array.from({length:128},()=>[])));});
+
+test('new guitar recipes ring out, strum across time, and include sustained strings',()=>{
+ for(const tune of ['fingerpick','strum','comping','swell']){const events=makeBar('warm',2,tune,0).flat();assert.ok(events.some(e=>e.voice==='strings'&&e.duration===4));assert.ok(events.filter(e=>e.voice==='guitar').every(e=>e.duration>=1.8));}
+ assert.ok(makeBar('warm',2,'strum',0).flat().some(e=>e.strum>0));assert.ok(makeBar('warm',2,'swell',0).flat().some(e=>e.swell));
+});
+test('note resizing uses step boundaries and preserves pitch and velocity',async()=>{
+ const {resizeNote}=await import('../src/experiments/study/arrangement.js');const event={voice:'guitar',notes:[60],duration:.7,velocity:.5};resizeNote(event,4,12);assert.equal(event.duration,2);resizeNote(event,4,40);assert.equal(event.duration,3);resizeNote(event,4,1);assert.equal(event.duration,.25);assert.deepEqual(event.notes,[60]);assert.equal(event.velocity,.5);
+});

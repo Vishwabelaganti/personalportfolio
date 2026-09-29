@@ -1,6 +1,11 @@
 import { compose, MOODS, randomSource } from './composition.js';
 
 export const TUNES = {
+  fingerpick: {label:'Fingerpicking', rhythm:[0,2,4,6,8,10,12,14], melody:[], order:[0,2,1,3], chordVoice:'guitar', arpeggio:true},
+  strum: {label:'Slow strums', rhythm:[0,8], melody:[], order:[], chordVoice:'guitar', strum:.028},
+  comping: {label:'Guitar jazz comping', rhythm:[0,6,11], melody:[], order:[], chordVoice:'guitar', strum:.014},
+  swell: {label:'Ambient swells', rhythm:[0], melody:[], order:[], chordVoice:'guitar', swell:true},
+  strings: {label:'Warm strings', rhythm:[0], melody:[], order:[], chordVoice:'strings'},
   velvet: { label: 'Velvet keys', rhythm: [0, 7, 12], melody: [2, 6, 10, 14], order: [0, 2, 1, 3] },
   drift: { label: 'Slow drift', rhythm: [0], melody: [3, 11], order: [3, 2] },
   bloom: { label: 'Petal dance', rhythm: [0, 6, 10], melody: [0, 3, 6, 9, 12, 15], order: [0, 1, 2, 3, 2, 1] },
@@ -10,7 +15,7 @@ export const TUNES = {
   rhodes: { label: 'Rhodes lounge', rhythm: [0, 7, 10, 14], melody: [4, 12], order: [3, 1], chordVoice:'rhodes', leadVoice:'melody' },
   sax: { label: 'Sax interlude', rhythm: [0, 10], melody: [1, 4, 8, 11, 15], order: [1, 2, 3, 2, 0], chordVoice:'rhodes', leadVoice:'sax' },
 };
-export const LANES = ['keys','rhodes','guitar','sax','bass','melody','kick','snare','hat'];
+export const LANES = ['keys','rhodes','strings','guitar','sax','bass','melody','kick','snare','hat'];
 export function makeBar(mood, seed, tune='velvet', chordIndex=0) {
   const preset=MOODS[mood]||MOODS.warm, recipe=TUNES[tune]||TUNES.velvet;
   const chord=preset.chords[chordIndex%4].map(n=>n+preset.root);
@@ -18,8 +23,9 @@ export function makeBar(mood, seed, tune='velvet', chordIndex=0) {
   const kicks={velvet:[0,7,10],drift:[0,10],bloom:[0,6,11,14],midnight:[0,3,10],jazz:[0,6,10],guitar:[0,10],rhodes:[0,7,10],sax:[0,10]}[tune]||[0,10];
   kicks.forEach(step=>bar[step].push({voice:'kick',velocity:step===0?.8:.5}));
   for(let step=0;step<16;step+=tune==='drift'?4:2)bar[step].push({voice:'hat',velocity:step%4===0?.3:.18});
-  recipe.rhythm.forEach((step,i)=>bar[step].push({voice:recipe.chordVoice||'keys',notes:recipe.arpeggio?[chord[i%4]]:chord,duration:recipe.arpeggio?.75:1.7,velocity:.7}));
+  recipe.rhythm.forEach((step,i)=>bar[step].push({voice:recipe.chordVoice||'keys',notes:recipe.arpeggio?[chord[i%4]]:chord,duration:recipe.swell||recipe.chordVoice==='strings'?4:recipe.chordVoice==='guitar'?1.8:1.7,velocity:.7,...(recipe.strum?{strum:recipe.strum}:{}),...(recipe.swell?{swell:true}:{})}));
   recipe.melody.forEach((step,i)=>bar[step].push({voice:recipe.leadVoice||'melody',notes:[chord[recipe.order[i%recipe.order.length]]+(recipe.leadVoice==='guitar'?0:12)],duration:recipe.leadVoice==='sax'?1.15:.7,velocity:.5}));
+  if(recipe.chordVoice==='guitar')bar[0].push({voice:'strings',notes:chord,duration:4,velocity:.4});
   return bar;
 }
 export function newArrangement(mood,seed) {
@@ -27,5 +33,11 @@ export function newArrangement(mood,seed) {
   return Array.from({length:8},(_,i)=>makeBar(mood,seed+i,tunes[Math.floor(random()*tunes.length)],progression[i%4])).flat();
 }
 export function validArrangement(value) {
-  return Array.isArray(value)&&value.length===128&&value.every(events=>Array.isArray(events)&&events.length<=12&&events.every(e=>e&&LANES.includes(e.voice)&&Number.isFinite(e.velocity)&&e.velocity>=0&&e.velocity<=1&&(!e.notes||(Array.isArray(e.notes)&&e.notes.length<=4&&e.notes.every(n=>Number.isFinite(n)&&n>=24&&n<=108)&&Number.isFinite(e.duration)&&e.duration>0&&e.duration<=8))));
+  return Array.isArray(value)&&value.length===128&&value.every(events=>Array.isArray(events)&&events.length<=12&&events.every(e=>e&&LANES.includes(e.voice)&&Number.isFinite(e.velocity)&&e.velocity>=0&&e.velocity<=1&&(e.strum===undefined||(Number.isFinite(e.strum)&&e.strum>=0&&e.strum<=.06))&&(e.swell===undefined||typeof e.swell==='boolean')&&(!e.notes||(Array.isArray(e.notes)&&e.notes.length<=4&&e.notes.every(n=>Number.isFinite(n)&&n>=24&&n<=108)&&Number.isFinite(e.duration)&&e.duration>0&&e.duration<=8))));
+}
+
+// Note duration is stored in beats; each editor step is one quarter of a beat.
+export function resizeNote(event, startStep, endStep) {
+  if(!event?.notes)return;
+  event.duration=(Math.max(startStep+1,Math.min(16,Math.round(endStep)))-startStep)/4;
 }
