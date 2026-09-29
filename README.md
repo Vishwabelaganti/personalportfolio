@@ -51,9 +51,11 @@ Vercel is optional: use the repository root, the Vite preset, `npm run build`, a
 
 ## Bloom gift sharing
 
-Creator: `/bloom/`. Choose peonies, roses, dahlias, or sunflowers, one of five palettes, and a basket or bouquet. Add a letter and up to six notes or linked goodies with preset objects. Gifts are compressed with browser-native deflate and encoded into `#gift=…`; decoding happens in the recipient's browser. No database, accounts, uploads, or server storage. New edits generate new links; old links retain their contents.
+Creator: `/bloom/`. Choose peonies, roses, dahlias, or sunflowers, one of five palettes, and a gift box, basket, or bouquet. Add a letter and up to six notes or linked goodies with preset objects. Gifts are compressed with browser-native deflate and encoded into `#gift=…`; decoding happens in the recipient's browser. No database, accounts, uploads, or server storage. New edits generate new links; old links retain their contents.
 
 Recipient views have an animated unwrap interaction and tappable objects, with no edit controls. Copy a link, preview the recipient view, or save a QR PNG. Shared links preserve the GitHub Pages subpath. Limits: title/labels 80 characters, letter 600, item notes 300, item URLs 600, complete share URL 2,200. Oversized gifts receive a shortening prompt. A current browser with CompressionStream/DecompressionStream is required. Payloads are bounded and validated, links accept only HTTP(S), and displayed text is not interpreted as HTML.
+
+The Bouquet and Gift Box tabs separate the two creator modes. Song fields include artist/album; playlists include curator/track list; places include an address and directions; invitations include date/time/venue; books include author/quote; movies include year/watch location; articles include publication/reading time; notes are envelopes with a message. Recipient keepsakes and actions differ by type. These optional details are preserved in the link.
 
 Original floral QR creation remains at `/bloom/?mode=qr`. Existing `?view=gift#u=…` links and embedded previews continue to work.
 

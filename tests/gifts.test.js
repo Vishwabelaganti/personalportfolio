@@ -25,3 +25,15 @@ test('gift QR decodes to the complete recipient link',async()=>{
 });
 
 test('sunflower gifts preserve their appearance in share links',async()=>{const url=await encodeGift({...gift,flowers:'sunflower',theme:'golden',style:'bouquet'},'https://vishwabelaganti.github.io/personalportfolio/bloom/');const restored=await decodeGift(new URL(url).hash);assert.equal(restored.flowers,'sunflower');assert.equal(restored.style,'bouquet');assert.equal(restored.theme,'golden');});
+
+test('typed gifts keep their own details and support invitations without links',async()=>{
+ const items=[{type:'song',label:'A song',url:'https://example.com/song',details:{artist:'An artist',album:'A record',venue:'discard me'}},{type:'playlist',label:'A mixtape',url:'https://example.com/list',details:{curator:'Me',tracks:'Track one\nTrack two'}},{type:'map',label:'Meet here',details:{address:'Central Park, New York'}},{type:'ticket',label:'Coffee together',details:{date:'2026-10-03',time:'10 am CDT',venue:'Our favorite café'}},{type:'book',label:'A good read',details:{author:'An author',quote:'A short line.'}},{type:'movie',label:'Movie night',details:{year:'2020',watch:'At home'}}];
+ const link=await encodeGift({...gift,style:'box',items},'https://vishwabelaganti.github.io/personalportfolio/bloom/');const decoded=await decodeGift(new URL(link).hash);
+ assert.equal(decoded.style,'box');assert.equal(decoded.items[0].details.artist,'An artist');assert.equal(decoded.items[0].details.venue,undefined);assert.equal(decoded.items[3].details.venue,'Our favorite café');assert.equal(decoded.items[3].url,undefined);
+});
+test('recipient actions are specific to the item and reject unsafe URLs',async()=>{
+ const {recipientLink,detailSummary,ITEM_TYPES}=await import('../src/experiments/bloom/types.js');
+ assert.match(recipientLink({type:'map',details:{address:'A & B café'}}),/query=A%20%26%20B%20caf%C3%A9/);assert.equal(recipientLink({type:'song',url:'javascript:alert(1)'}),null);
+ assert.equal(detailSummary({type:'book',details:{author:'A writer'}}),'by A writer');assert.notEqual(ITEM_TYPES.song.action,ITEM_TYPES.movie.action);assert.notDeepEqual(ITEM_TYPES.song.fields,ITEM_TYPES.ticket.fields);
+ assert.throws(()=>validateGift({...gift,items:[{type:'article',label:'Reading',url:'https://example.com',details:{minutes:'bad'}}]}));
+});

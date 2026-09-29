@@ -6,7 +6,7 @@ export const PALETTES = {
   scarlet: { name:'Scarlet', petals:['#cc5c60','#e0847b','#f0a18e','#a9344b','#d66c6e'], dark:'#712c38', leaf:'#657943', butterfly:'#efbe75' },
   blue: { name:'Blue hour', petals:['#729dbb','#a3c9d9','#c2dce5','#587f9e','#86b3c8'], dark:'#304f67', leaf:'#6a8267', butterfly:'#d7a276' }
 };
-export const FLOWERS = { rose:'Rosa · garden rose', peony:'Paeonia · garden peony', dahlia:'Dahlia · café au lait' };
+export const FLOWERS = { rose:'Rosa · garden rose', peony:'Paeonia · garden peony', dahlia:'Dahlia · café au lait', sunflower:'Helianthus · sunflower' };
 export function normalizeUrl(value) {
   const trimmed = value.trim();
   if (!trimmed) throw new Error('Add a link to tuck into your bouquet.');

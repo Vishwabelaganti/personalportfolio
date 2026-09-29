@@ -103,3 +103,7 @@ Build gifts around words, themed objects, links, and animation so sharing and QR
 ## When to use Vercel
 
 Reconsider Vercel only when an experiment needs private API keys, saved or editable gifts behind the same short URL, uploads, accounts, scheduled reveals, password-protected links, or preview deployments for larger work. Until then, GitHub Pages is the default for the portfolio and Playground.
+
+## Accepted refinement — September 29, 2026
+
+Keep the homepage calm, with a prominent portrait and normal scrolling. Bloom has separate Bouquet and Gift Box tabs. Each goodie type needs relevant input fields, a distinct keepsake, and a suitable recipient action; a generic label-and-link form is insufficient. Sunflowers are available in both modes.

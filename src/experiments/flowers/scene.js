@@ -90,6 +90,7 @@ export class BloomScene {
  }
  buildFlowers(code){
   if(this.petals){this.bouquet.remove(this.petals);this.petals.geometry.dispose();this.petals.material.dispose();}
+  if(this.centers){this.bouquet.remove(this.centers);this.centers.geometry.dispose();this.centers.material.dispose();this.centers=null;}
   this.code=code;this.flowers=[];const n=code.modules.size,unit=6.1/(n+8);
   for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(code.modules.get(r,c)&&!isReserved(code,r,c))this.flowers.push({r,c});
   // Spatially shuffle destinations so the bouquet unravels in a flowing, interlaced arc.
@@ -105,19 +106,20 @@ export class BloomScene {
    f.dest=new THREE.Vector3((cFor(f)+4.5)*unit-3.05,3.05-(f.r+4.5)*unit+.55,.32);
    f.qrSize=unit*.45;f.phase=rand(i+12);f.color=Math.floor(rand(i+2)*5);
   });
-  this.localPetals=[];const layers=this.flowerKind==='peony'?5:this.flowerKind==='dahlia'?5:4;
+  this.localPetals=[];const layers=this.flowerKind==='sunflower'?2:this.flowerKind==='peony'?5:this.flowerKind==='dahlia'?5:4;
   const d=new THREE.Object3D();
   for(let ring=0;ring<layers;ring++){
-   const count=this.flowerKind==='dahlia'?12:10;
+   const count=this.flowerKind==='sunflower'?16:this.flowerKind==='dahlia'?12:10;
    for(let j=0;j<count;j++){
     const a=j/count*TAU+ring*.39;const radius=.27-ring*.044;const length=(this.flowerKind==='dahlia'?.75:.9)-ring*.135;
     d.position.set(Math.sin(a)*radius,Math.cos(a)*radius,ring*.11);
     d.rotation.set(.22+ring*.24,0,-a);
-    d.scale.set(this.flowerKind==='dahlia'?.56:1,length/.9,length/.9);d.scale.multiplyScalar(length);
+    d.scale.set(this.flowerKind==='sunflower'?.4:this.flowerKind==='dahlia'?.56:1,length/.9,length/.9);d.scale.multiplyScalar(length);
     d.updateMatrix();this.localPetals.push(d.matrix.clone());
    }
   }
   this.petals=new THREE.InstancedMesh(petalGeometry(this.flowerKind),new THREE.MeshStandardMaterial({roughness:.59,metalness:0,side:THREE.DoubleSide,vertexColors:true}),this.flowers.length*this.localPetals.length);
+  if(this.flowerKind==='sunflower'){const geometry=new THREE.SphereGeometry(.3,12,8);geometry.scale(1,1,.4);geometry.translate(0,0,.27);this.centers=new THREE.InstancedMesh(geometry,new THREE.MeshStandardMaterial({color:'#59402a',roughness:1}),this.flowers.length);this.centers.frustumCulled=false;this.bouquet.add(this.centers);}
   this.petals.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.petals.frustumCulled=false;this.bouquet.add(this.petals);this.setPalette(this.state.palette);this.needsUpdate=true;
  }
  updateQR(code){
@@ -127,7 +129,7 @@ export class BloomScene {
  }
  setPalette(key){
   this.state.palette=key;const palette=PALETTES[key];const col=new THREE.Color();
-  if(this.petals){this.flowers.forEach((f,i)=>{for(let p=0;p<this.localPetals.length;p++){col.set(palette.petals[f.color]);col.multiplyScalar(.87+rand(i*73+p)*.19);this.petals.setColorAt(i*this.localPetals.length+p,col);}});this.petals.instanceColor.needsUpdate=true;}
+  if(this.petals){this.flowers.forEach((f,i)=>{for(let p=0;p<this.localPetals.length;p++){col.set(this.flowerKind==='sunflower'?['#e8b739','#f2c950','#d99e2f','#f7d466','#e6af36'][f.color]:palette.petals[f.color]);col.multiplyScalar(.87+rand(i*73+p)*.19);this.petals.setColorAt(i*this.localPetals.length+p,col);}});this.petals.instanceColor.needsUpdate=true;}
   this.leafMaterial.color.set(palette.leaf);this.butterflies?.forEach(b=>b.mat.color.set(palette.butterfly));if(this.qr)this.updateQR(this.code);this.needsUpdate=true;
  }
  setFlower(kind){this.flowerKind=kind;this.buildFlowers(this.code);this.updateQR(this.code);}
@@ -140,8 +142,9 @@ export class BloomScene {
    d.position.lerpVectors(f.home,f.dest,t);d.position.x+=Math.sin(f.phase*TAU)*arc*.8;d.position.y+=arc*(.6+f.phase*.8);d.position.z+=arc*(1+f.phase*1.6);
    d.quaternion.copy(f.rotation).slerp(identity,t);d.rotateZ(arc*(f.phase-.5)*2);
    const size=THREE.MathUtils.lerp(f.homeSize,f.qrSize,t)*(1-smooth(.87,1,p));d.scale.setScalar(Math.max(.00001,size));d.updateMatrix();
+   if(this.centers)this.centers.setMatrixAt(i,d.matrix);
    for(let j=0;j<this.localPetals.length;j++){m.multiplyMatrices(d.matrix,this.localPetals[j]);this.petals.setMatrixAt(i*this.localPetals.length+j,m);}
-  });this.petals.instanceMatrix.needsUpdate=true;
+  });this.petals.instanceMatrix.needsUpdate=true;if(this.centers){this.centers.instanceMatrix.needsUpdate=true;this.centers.count=p===0?this.visibleFlowers:p===1?0:this.flowers.length;}
   this.petals.count=p===0?this.visibleFlowers*this.localPetals.length:p===1?0:this.flowers.length*this.localPetals.length;
  }
  frame(now){
