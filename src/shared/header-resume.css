@@ -1,0 +1,19 @@
+.site-header .nav-resume {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 9px 13px;
+  border: 1px solid #cfd3dd;
+  border-radius: 22px;
+  color: #596176;
+  font-size: 13px;
+}
+
+.site-header .nav-resume:hover { background: #ebeaf0; color: var(--ink); }
+.site-header .nav-resume svg { width: 14px; }
+.site-header .nav-contact { margin-left: 19px; gap: 10px; }
+
+@media (max-width: 800px) {
+  .site-header .nav-resume { margin-left: 0; }
+}
