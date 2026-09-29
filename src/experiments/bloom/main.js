@@ -1,4 +1,5 @@
 import './style.css';
+import './recipient.css';
 import QRCode from 'qrcode';
 import { ITEM_TYPES, recipientLink, detailSummary } from './types.js';
 import { THEMES, FLOWERS, OBJECTS, TYPES, encodeGift, decodeGift } from './gift.js';
@@ -6,6 +7,7 @@ const app=document.querySelector('#app');
 document.title='Bloom · A little gift · Vishwa Belaganti';
 let gift={version:1,theme:'rosewater',flowers:'peony',style:'box',title:'For you',letter:'A small reminder that I’m thinking of you.',items:[{type:'note',object:'envelope',label:'Open when you need a smile',body:'The world is a little brighter with you in it.'}]};
 const recipient=new URLSearchParams(location.hash.slice(1)).has('gift');
+document.body.classList.toggle('gift-recipient', recipient);
 app.innerHTML=`<header class="gift-header"><a class="brand" href="../index.html"><b>vb.</b><span>Vishwa Belaganti<small>PLAYGROUND / BLOOM</small></span></a><a href="../playground.html">Back to playground ↗</a></header><main class="gift-layout ${recipient?'recipient':''}"><section class="gift-stage" aria-label="Your flower gift"><div class="stage-copy"><span class="eyebrow">SMALL THINGS, SOFTLY SENT</span><h1>A little <em>something.</em><br>Just for you.</h1><p>Some feelings deserve more than a message.</p></div><div id="gift-preview"></div><div class="stage-caption"><span>WORDS · FLOWERS · LITTLE WONDERS</span><span>MADE TO BE OPENED</span></div></section>${recipient?'':'<aside class="gift-studio"></aside>'}</main><footer>A little experiment by Vishwa Belaganti <span>Made of flowers & a few kind words.</span></footer><dialog id="item-dialog"><button class="dialog-close" aria-label="Close item">×</button><span class="eyebrow" id="item-kind"></span><div id="item-art" aria-hidden="true"></div><h2 id="item-title"></h2><div id="item-details"></div><p id="item-body"></p><a id="item-link" target="_blank" rel="noopener noreferrer">Open your little gift ↗</a></dialog>`;
 const preview=document.querySelector('#gift-preview'),dialog=document.querySelector('#item-dialog');
 dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});

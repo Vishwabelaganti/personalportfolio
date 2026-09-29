@@ -1,0 +1,17 @@
+/* A shared gift should belong to the sender and recipient, not the portfolio. */
+body.gift-recipient {
+  background: #f8f6f1;
+}
+
+.gift-recipient .gift-header,
+.gift-recipient > #app > footer {
+  display: none;
+}
+
+.gift-recipient .gift-stage {
+  padding-top: clamp(34px, 8vh, 84px);
+}
+
+.gift-recipient .stage-caption {
+  display: none;
+}
