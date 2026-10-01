@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f5f2"><meta name="description" content="Ink & Current: a living, generative ink landscape. Mountains above, strange fish below, and water that follows your hand."><title>Ink & Current · Vishwa Belaganti</title><link rel="icon" type="image/svg+xml" href="../favicon.svg"><link rel="stylesheet" href="../src/experiments/ink/style.css"></head>
+<body>
+<a class="skip" href="#controls">Skip to scene controls</a>
+<header><a class="identity" href="../index.html">vb<span>.</span></a><a href="../playground.html">← Playground</a><span class="edition">AN EXPERIMENT BY VISHWA BELAGANTI</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">GENERATIVE STUDY / 04</p><h1>Ink <em>&</em> Current</h1></div><p class="description">A mountain remembers.<br>A river keeps moving.</p></section>
+<section id="scene" class="scene" aria-label="A generated black and white mountain landscape above a river of swimming ink fish" aria-busy="true">
+<div class="sun" aria-hidden="true"></div><div id="landscape" aria-hidden="true"></div><div id="reflection" aria-hidden="true"></div>
+<div class="water"><canvas id="fluid" aria-hidden="true"></canvas></div><canvas id="fish" aria-hidden="true"></canvas>
+<div class="shore" aria-hidden="true"></div><span class="scene-mark" aria-hidden="true">山<br>水</span>
+<p id="loading" role="status">Grinding the ink. Drawing a world…</p><p class="gesture" id="gesture">Drag through the river to stir the ink</p>
+</section>
+<section id="controls" class="controls" aria-label="Scene controls"><div class="scene-number"><span class="eyebrow">ONE OF A KIND, EVERY TIME</span><span id="seed-label">Preparing a composition</span></div><div class="buttons"><button id="redraw" type="button" disabled>Redraw ink</button><button id="pause" type="button" aria-pressed="false">Pause motion</button><button id="generate" type="button" class="primary">New landscape <span aria-hidden="true">↗</span></button></div></section>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+<footer><p>Mountains, scales, and a little controlled chaos.<br><span>Drawn in your browser. Never quite the same twice.</span></p><details><summary>Made possible by open source</summary><p>Landscape: <a href="https://github.com/LingDong-/shan-shui-inf">Shan, Shui</a> · Fish: <a href="https://github.com/LingDong-/fishdraw">fishdraw</a><br>By Lingdong Huang. Water: <a href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">WebGL Fluid Simulation</a> by Pavel Dobryakov.<br>Adapted and composed by Vishwa Belaganti. MIT-licensed source; notices included.</p></details></footer>
+</main><script type="module" src="../src/experiments/ink/main.js"></script>
+</body></html>
