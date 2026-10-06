@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { encodeShare, decodeShare } from '../src/experiments/flowers/qr.js';
-const pages=['index.html','projects.html','experience.html','certificates.html','playground.html','bloom/index.html','arcade/index.html','study/index.html','404.html'];
+const pages=['index.html','projects.html','experience.html','certificates.html','skills.html','playground.html','bloom/index.html','arcade/index.html','study/index.html','404.html'];
 test('local page links and source assets resolve, including the flower route', async()=>{
  for(const page of pages){
   const html=await readFile(page,'utf8');
@@ -29,3 +29,16 @@ test('flower experience carries the portfolio identity',async()=>{
  assert.match(html,/\.\.\/playground.html/);
  assert.doesNotMatch(html,/TypingMind|Ann Nguyen|Bloom home|bloom<span/);
 });
+
+ test('all portfolio headers expose Skills and Certifications with correct active pages', async () => {
+  for (const page of pages.filter(page => page !== 'bloom/index.html')) {
+   const html = await readFile(page, 'utf8');
+   const nav = html.match(/<nav id="main-nav"[^>]*>(.*?)<\/nav>/s)?.[1];
+   assert.ok(nav, `${page} has main navigation`);
+   const prefix = page.includes('/') ? '../' : '';
+   for (const [route, label] of [['skills.html', 'Skills'], ['certificates.html', 'Certifications']]) {
+    assert.ok(nav.includes(`href="${prefix}${route}"`), `${page} links to ${label}`);
+    if (page === route) assert.ok(nav.includes(`href="${route}" aria-current="page">${label}`));
+   }
+  }
+ });

@@ -11,6 +11,7 @@ export default defineConfig({
         projects: resolve('projects.html'),
         experience: resolve('experience.html'),
         certificates: resolve('certificates.html'),
+        skills: resolve('skills.html'),
         playground: resolve('playground.html'),
         flowers: resolve('bloom/index.html'),
         arcade: resolve('arcade/index.html'),
