@@ -16,3 +16,37 @@
 .todo-clear:disabled { opacity: .5; cursor: default; }
 .todo-card .todo-status, .todo-card .todo-empty { font-size: 12px; line-height: 1.6; margin: 12px 0 0; }
 .todo-entry input:focus-visible { outline: 2px solid #8a77b7; outline-offset: 2px; }
+
+.todo-card { padding: 20px; }
+.todo-card h2 { margin-bottom: 12px; }
+.todo-list:empty { margin: 0; }
+.todo-footer { margin-top: 16px; }
+.todo-item { border-bottom: 0; border-radius: 8px; padding: 2px 6px; transition: background 220ms ease; }
+.todo-item:hover { background: #f3f0f7; }
+.todo-item label { align-items: flex-start; padding-block: 11px; }
+.todo-item .todo-text { min-width: 0; }
+.todo-text > span {
+  background: linear-gradient(#a196b0, #a196b0) no-repeat left 55% / 0% 1px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 380ms cubic-bezier(.22, 1, .36, 1), color 300ms ease;
+}
+.todo-item input:checked + .todo-text { text-decoration: none; }
+.todo-item input:checked + .todo-text > span { background-size: 100% 1px; color: #9992a1; }
+.todo-item input {
+  appearance: none; border: 1.5px solid #c9c0d3; border-radius: 6px;
+  display: grid; place-content: center; background: #fff; cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+.todo-item input::before {
+  content: ''; width: 8px; height: 4px; border-left: 1.5px solid white; border-bottom: 1.5px solid white;
+  transform: rotate(-45deg) scale(0); transition: transform 240ms cubic-bezier(.2, 1.5, .5, 1);
+}
+.todo-item input:checked { background: #8b7b9f; border-color: #8b7b9f; }
+.todo-item input:checked::before { transform: rotate(-45deg) scale(1); }
+.todo-item input:focus-visible { outline: 2px solid #8a77b7; outline-offset: 3px; }
+.todo-item button { font-size: 20px; border-radius: 7px; transition: color 180ms ease, background 180ms ease; }
+.todo-item button:hover { color: #80596d; background: #ede5ed; }
+@media (prefers-reduced-motion: reduce) {
+  .todo-item, .todo-item input, .todo-item input::before, .todo-text > span, .todo-item button { transition: none; }
+}

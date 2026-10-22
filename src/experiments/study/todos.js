@@ -45,7 +45,10 @@ export function initTodos(root) {
       checkbox.type = 'checkbox';
       checkbox.checked = task.done;
       const text = document.createElement('span');
-      text.textContent = task.text;
+      text.className = 'todo-text';
+      const words = document.createElement('span');
+      words.textContent = task.text;
+      text.append(words);
       label.append(checkbox, text);
       const remove = document.createElement('button');
       remove.type = 'button';
