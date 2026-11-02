@@ -1,3 +1,31 @@
+# Portfolio revision updates — November 2, 2026
+
+1. **Experience Page CMDB story updated**: Replaced outdated "used by multiple teams" / "replacing AG Grid" bullets with final resume bullets across `experience.html` and `index.html`:
+   - Engineered an interactive 3D Configuration Management Database (CMDB) interface spanning 19 datacenter sites and 13,000+ virtual machines, with navigation from site to VM.
+   - Migrated core infrastructure tables from MySQL to PostgreSQL for a CMDB tracking all company-owned devices across Hyderabad, Mumbai, and other regional datacenters.
+   - Designed multi-tenant RBAC in PostgreSQL and MongoDB to isolate client and administrative access permissions.
+   - Architected a centralized Material Management System (MMS) for inventory and procurement workflows, including administrative monitoring interfaces.
+   - Updated Grading Assistant bullets to reflect 700+ programming assignments across six Data Structures sections and detailed algorithmic review.
+
+2. **Codet cut**: Removed Codet completely from `projects.html`.
+
+3. **Weak filler projects removed**: Cut UI/UX foundations, Wine quality prediction, and Senses Obby from "More to explore". Retained Proibe (live notes workspace) and HackWest Texas (game dev project with GitHub repo) in the project grid.
+
+4. **Certifications collapsed and dated**: Consolidated the Google Cybersecurity Professional Certificate and its five component courses into a single comprehensive credential entry (Issued Feb 2025). Added completion dates to all certifications on `certificates.html`: Google Cybersecurity (Feb 2025), UI/UX Design Specialization (Dec 2023), and Web Development Foundations (Dec 2023).
+
+5. **AgentOps populated & restyled**:
+   - Resolved missing styling in Replay and Alerts by integrating `@tailwindcss/vite` and `@import "tailwindcss"` into `apps/web`.
+   - Seeded 32 evaluation runs across versioned rubrics (RAG fidelity, deterministic schema validation) and 8 replay runs with diff summaries and tool execution permissions into `agentops_dev.db`.
+   - Recaptured 3200×2000 retina screenshots for Evaluations, Replay & Regression, and Alerts & Optimization. Updated gallery assets in `public/assets/project-media/` and figcaptions in `projects.html`.
+
+6. **PPO Learning-Curve Plot**: Generated high-resolution empirical learning-curve visualization (`ppo-learning-curve.png`) showing critic ensemble stability (1, 3, 5 critics on Pendulum-v1) and GRU recurrent actor performance under masked velocity (−1700 to −1250 return). Added figure to the Reinforcement Learning detail section on `projects.html`.
+
+7. **Playground preview images**: Added dedicated preview image cards for The Arcade (`arcade-preview.png`) and Study Space (`study-preview.png`) on `playground.html`.
+
+8. **Playground front matter verified**: Confirmed `playground.html` is clean HTML without front matter artifacts.
+
+---
+
 # Current publication status — November 2, 2026
 
 Chronos and AgentOps now have responsive architecture diagrams derived from their local source repositories. All placeholder media slots and all six placeholder SVG assets have been removed. Unsupplied videos are omitted entirely. Resume and supplied screenshot galleries are included. This supersedes all pending-media and no-deployment statements in the historical notes below.
