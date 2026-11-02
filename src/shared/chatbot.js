@@ -84,15 +84,15 @@ class VishwaBot {
     const cat = this.classify(msg);
     switch (cat) {
       case 'greetings': return "Hey! 👋 I'm Vishwa's portfolio assistant. Ask me about projects, skills, or experience — or just say hi.";
-      case 'projects': return "I've built 3D web experiences with Three.js, AI-powered tools, and interactive websites. Check them out on the <a href='projects.html'>Work page</a>!";
-      case 'skills': return "My stack includes Python, JavaScript, React, Three.js, PostgreSQL, and AI/ML frameworks. I also love UI/UX design — ask me anything specific!";
-      case 'school': return "I'm studying Computer Science at Texas Tech University. I'm active in GDSC and CodePath, where I mentor students in web development.";
-      case 'contact': return "Reach me at <a href='mailto:vishwa.belaganti@gmail.com'>vishwa.belaganti@gmail.com</a>. I'm also on <a href='https://www.linkedin.com/in/vishwa-belaganti/' target='_blank'>LinkedIn</a> and <a href='https://github.com/Vishwabelaganti' target='_blank'>GitHub</a>.";
+      case 'projects': return "Featured projects: Chronos, AgentOps, In-Memory PDF &amp; Markdown Dropper (published on Chrome Web Store), and Reinforcement Learning – PPO Extensions. Check them out on the <a href='projects.html'>Work page</a>!";
+      case 'skills': return "My stack includes Python, TypeScript, React, FastAPI, PostgreSQL, Redis, and PyTorch. See the <a href='skills.html'>Skills page</a> for the full toolkit.";
+      case 'school': return "I study at Texas Tech University, Honors College: B.S. Computer Science, Minor in Mathematics. Expected May 2027. GPA 3.96/4.0. Honors: President’s Honors List (4 semesters), Dean’s List, Terry G Myers Scholarship.";
+      case 'contact': return "Reach me at <a href='mailto:vishwakaranb@gmail.com'>vishwakaranb@gmail.com</a>. I'm also on <a href='https://www.linkedin.com/in/vishwa-belaganti/' target='_blank'>LinkedIn</a> and <a href='https://github.com/Vishwabelaganti' target='_blank'>GitHub</a>.";
       case 'certificates': return "I've earned certifications in Google Cybersecurity, Python, MySQL, and Figma UI/UX. See them on the <a href='certificates.html'>Credentials page</a>.";
-      case 'resume': window.open(new URL('files/Vishwa_Belaganti_Resume.pdf', portfolioRoot).href, '_blank', 'noopener'); return "Opening resume in a new tab! 📄";
+      case 'resume': return "<a href='assets/Vishwa_Belaganti_Resume.pdf' download>Download my resume (PDF)</a>.";
       case 'joke': return await this.joke();
-      case 'hobbies': return "When I'm not coding — soccer, gym, drawing, and trying new dessert recipes. Baking is my stress reliever! 🎨⚽";
-      case 'music': return "Big fan of Stephan Sanchez, plus lofi beats for coding sessions and ambient rain sounds for focus. 🎵";
+      case 'hobbies': return "This portfolio covers my work in backend, full-stack, and applied AI/ML systems. You can also explore my browser experiments in the <a href='playground.html'>Playground</a>.";
+      case 'music': return "The <a href='study/'>Study space</a> includes browser-generated lofi music and ambient sounds.";
       case 'identity': return "I'm Vishwa's portfolio companion — here to help you explore projects, learn about skills, or just chat.";
       case 'gratitude': return "Happy to help! Feel free to ask anything else. 😊";
       case 'sympathy': return "I'm sorry to hear that. How about a quick joke to brighten your day? Just say 'joke'!";
@@ -103,7 +103,7 @@ class VishwaBot {
       case 'arcade': return "The <a href='arcade/'>Arcade</a> has Snake, Pong, Hangman, number guessing, and a quick quiz. Pick a game and have a little break!";
       case 'study': return "Try the <a href='study/'>Study space</a> for a focus timer, playable wind chimes, and lofi sounds.";
       case 'playground': return "The Playground is where I keep experiments — like the <a href='bloom/'>Floral QR</a> bouquet! Check it out on the <a href='playground.html'>Playground page</a>.";
-      case 'experience': return "I'm currently an Automation Intern at CtrlS Datacenters, building CMDB tools and 3D navigation. Before that, I was a Grading Assistant for Data Structures at Texas Tech. More on the <a href='experience.html'>Experience page</a>.";
+      case 'experience': return "I was an Automation Intern at CtrlS Datacenters from Jun 2026 – Aug 2026, building datacenter management tools. I was a Grading Assistant for Data Structures at Texas Tech from Sep 2025 – Jan 2026, evaluating 700+ assignments for ~180 students. More on the <a href='experience.html'>Experience page</a>.";
       default: return "I'm not sure I caught that! Try asking about projects, skills, experience, or say 'help' for ideas.";
     }
   }

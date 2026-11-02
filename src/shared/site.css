@@ -31,3 +31,35 @@
 @media (max-width: 380px) {
   .site-header > .identity > span:last-child { max-width: 85px; }
 }
+
+/* Resume-aligned content uses the existing portfolio components and palette. */
+.featured-project ul { padding-left: 20px; font-size: 14px; line-height: 1.8; }
+.featured-project li { margin-bottom: 12px; }
+.featured-project h3 { overflow-wrap: anywhere; }
+.featured-project .tags span, .skills-grid .tags span { color: var(--ink); white-space: normal; }
+.featured-project .eyebrow { color: var(--ink); }
+.project-detail { padding-block: 50px; border-top: 1px solid var(--line); scroll-margin-top: 25px; }
+.project-details { margin-top: 70px; }
+.project-detail h2 { font-size: clamp(28px, 4vw, 40px); overflow-wrap: anywhere; }
+.project-detail h3 { font-size: 20px; letter-spacing: -.4px; margin-top: 25px; }
+.project-detail p { max-width: 850px; color: var(--ink); }
+.project-media { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-block: 28px; }
+.project-media figure { margin: 0; }
+.project-media img { width: 100%; height: auto; border-radius: 12px; }
+.project-media figcaption, .resume-note, .timeline-entry .content-todo { font-size: 13px; line-height: 1.7; color: var(--ink); }
+.resume-note { margin-top: 12px; }
+.hero-actions { flex-wrap: wrap; }
+@media (max-width: 620px) { .project-media { grid-template-columns: 1fr; } }
+.project-row > .content-todo { font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+@media (max-width: 620px) {
+  .site-header .nav-resume { padding: 8px; font-size: 11px; }
+  .project-row > .content-todo { grid-column: 2; }
+}
+
+.chronos-gallery > figure:first-child { grid-column: 1 / -1; }
+.chronos-gallery figcaption { margin-top: 10px; }
+.chronos-gallery figure > a { display: block; border-radius: 12px; }
+
+.project-media .gallery-wide { grid-column: 1 / -1; }
+.project-media figcaption { margin-top: 10px; }
+.project-media figure > a { display: block; border-radius: 12px; }
