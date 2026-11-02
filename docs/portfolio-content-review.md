@@ -1,3 +1,11 @@
+# Current publication status — November 2, 2026
+
+Chronos and AgentOps now have responsive architecture diagrams derived from their local source repositories. All placeholder media slots and all six placeholder SVG assets have been removed. Unsupplied videos are omitted entirely. Resume and supplied screenshot galleries are included. This supersedes all pending-media and no-deployment statements in the historical notes below.
+
+Source mapping and runtime distinctions are recorded in `project-architecture.md`.
+
+---
+
 # Portfolio résumé refresh review
 
 ## Current status — resume alignment and PDF Dropper gallery

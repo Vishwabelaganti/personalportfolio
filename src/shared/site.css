@@ -63,3 +63,19 @@
 .project-media .gallery-wide { grid-column: 1 / -1; }
 .project-media figcaption { margin-top: 10px; }
 .project-media figure > a { display: block; border-radius: 12px; }
+
+/* Source-derived project architecture; text remains readable without scripting. */
+.architecture { margin-block: 30px; padding: clamp(18px, 3vw, 32px); border: 1px solid var(--ink); border-radius: 16px; }
+.architecture-lane { margin-top: 24px; }
+.architecture-lane h4 { margin: 0 0 14px; font-size: 14px; line-height: 1.6; }
+.architecture-flow { display: flex; gap: 26px; padding: 0; margin: 0; list-style: none; }
+.architecture-flow li { position: relative; flex: 1; min-width: 0; padding: 16px; border-radius: 10px; background: #e6edf8; }
+.architecture-flow li + li::before { content: '→'; position: absolute; left: -23px; top: 18px; color: var(--ink); }
+.architecture-flow strong { display: block; margin-bottom: 8px; font-size: 14px; line-height: 1.5; }
+.architecture-flow span { display: block; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.architecture-lane:nth-of-type(even) .architecture-flow li { background: #f8e7dc; }
+.project-detail .architecture-note { margin: 22px 0 0; font-size: 13px; }
+@media (max-width: 1000px) {
+  .architecture-flow { flex-direction: column; gap: 24px; }
+  .architecture-flow li + li::before { content: '↓'; left: 20px; top: -25px; }
+}

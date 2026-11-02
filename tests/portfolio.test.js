@@ -42,3 +42,11 @@ test('flower experience carries the portfolio identity',async()=>{
    }
   }
  });
+
+test('published project details contain architecture and no unfinished media slots', async () => {
+ const html = await readFile('projects.html', 'utf8');
+ assert.doesNotMatch(html, /-placeholder\.svg|TODO:|asset not yet supplied|diagram pending|video pending/i);
+ for (const project of ['chronos', 'agentops']) {
+  assert.match(html, new RegExp(`id="${project}-architecture"`));
+ }
+});
