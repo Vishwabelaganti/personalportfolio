@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "Vishwa Belaganti \u2014 software, thoughtful interfaces, and interactive experiments.",
+  "description": "Vishwa Belaganti — software, thoughtful interfaces, and interactive experiments.",
   "author": "Vishwa Belaganti",
   "license": "MIT",
   "scripts": {
@@ -18,12 +18,16 @@
   "dependencies": {
     "lucide": "0.468.0",
     "qrcode": "1.5.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "three": "0.180.0"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^1.0.9",
+    "@tailwindcss/vite": "4.3.3",
     "jsqr": "1.4.0",
     "pngjs": "7.0.0",
+    "tailwindcss": "4.3.3",
     "vite": "6.3.6"
   }
 }

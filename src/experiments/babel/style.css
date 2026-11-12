@@ -1,0 +1,235 @@
+.babel-body,
+.babel-app {
+  --babel-bg: #f7f8f6;
+  --babel-surface: #fff;
+  --babel-ink: #19231e;
+  --babel-muted: #52635a;
+  --babel-rule: #d7ded9;
+  --babel-input-rule: #a6b3ab;
+  --babel-accent: #2b5643;
+  --babel-tint: #e6efe9;
+  --babel-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  color: var(--babel-ink);
+  font-family: var(--babel-mono);
+  font-size: .875rem;
+  line-height: 1.5;
+}
+
+.babel-body {
+  background: var(--babel-bg);
+  margin: 0;
+}
+
+.babel-shell {
+  box-sizing: border-box;
+  margin-inline: auto;
+  max-width: 66rem;
+  padding-inline: clamp(1rem, 4vw, 2.25rem);
+}
+
+.babel-site-header {
+  border-bottom: 1px solid var(--babel-rule);
+  padding-block: .9rem;
+}
+
+.babel-site-header a,
+.babel-site-footer a {
+  color: var(--babel-accent);
+  text-underline-offset: .22em;
+}
+
+.babel-site-header a { text-decoration: none; }
+.babel-site-header a:hover { text-decoration: underline; }
+.babel-main { padding-top: clamp(1.75rem, 5vw, 3.75rem); }
+.babel-main > h1 {
+  font-size: clamp(1.65rem, 4.1vw, 2.65rem);
+  font-weight: 700;
+  letter-spacing: -.055em;
+  line-height: 1.12;
+  margin: 0;
+}
+
+.babel-intro {
+  color: var(--babel-muted);
+  margin: .75rem 0 1.75rem;
+  max-width: 66ch;
+}
+
+.babel-site-footer {
+  display: flex;
+  gap: 1.1rem;
+  padding-block: 1rem 2.5rem;
+  font-size: .75rem;
+}
+
+.babel-app { min-width: 0; }
+.babel-app *, .babel-app *::before, .babel-app *::after { box-sizing: border-box; }
+.babel-app .babel-muted { color: var(--babel-muted); }
+.babel-app .babel-controls {
+  background: var(--babel-surface);
+  border: 1px solid var(--babel-rule);
+  border-radius: .35rem;
+}
+.babel-app .babel-topbar,
+.babel-app .babel-navigator { padding: .95rem 1rem; }
+.babel-app .babel-navigator { border-top: 1px solid var(--babel-rule); }
+.babel-app .babel-search { min-width: min(22rem, 100%); }
+.babel-app .babel-label {
+  color: var(--babel-muted);
+  display: block;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .025em;
+  margin-bottom: .35rem;
+}
+
+.babel-app .babel-input,
+.babel-app .babel-button {
+  background: var(--babel-surface);
+  border: 1px solid var(--babel-input-rule);
+  border-radius: .25rem;
+  color: var(--babel-ink);
+  font: inherit;
+  min-height: 2.5rem;
+  padding: .48rem .65rem;
+}
+.babel-app .babel-input::placeholder { color: var(--babel-muted); }
+.babel-app .babel-query {
+  display: block;
+  height: 2.5rem;
+  overflow: auto;
+  resize: none;
+  white-space: pre;
+}
+.babel-app .babel-button {
+  cursor: pointer;
+  font-size: .8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.babel-app .babel-button:hover { background: var(--babel-tint); }
+.babel-app .babel-primary {
+  background: var(--babel-accent);
+  border-color: var(--babel-accent);
+  color: white;
+}
+.babel-app .babel-primary:hover { background: #1d4132; }
+.babel-app :focus-visible,
+.babel-body a:focus-visible {
+  outline: 2px solid var(--babel-accent);
+  outline-offset: 2px;
+}
+.babel-app .babel-segment .babel-button:first-child { border-radius: .25rem 0 0 .25rem; }
+.babel-app .babel-segment .babel-button:last-child {
+  border-radius: 0 .25rem .25rem 0;
+  margin-left: -1px;
+}
+.babel-app .babel-segment .babel-button[aria-pressed="true"] {
+  background: var(--babel-tint);
+  border-color: var(--babel-accent);
+  color: var(--babel-accent);
+  position: relative;
+}
+.babel-app .babel-hex-field { flex: 1 1 12rem; }
+.babel-app .babel-numbers { flex: 0 1 20rem; }
+.babel-app .babel-nav-actions { flex: 0 0 auto; }
+
+.babel-app .babel-probes {
+  background: var(--babel-surface);
+  border: 1px solid var(--babel-input-rule);
+  border-radius: .25rem;
+  top: calc(100% + .35rem);
+}
+.babel-app .babel-probe {
+  cursor: pointer;
+  padding: .55rem .65rem;
+}
+.babel-app .babel-probe + .babel-probe { border-top: 1px solid var(--babel-rule); }
+.babel-app .babel-probe:hover,
+.babel-app .babel-probe[aria-selected="true"] { background: var(--babel-tint); }
+.babel-app .babel-completion {
+  flex: 1 1 10ch;
+  min-width: 0;
+  white-space: pre;
+}
+.babel-app .babel-badge {
+  background: var(--babel-bg);
+  border: 1px solid var(--babel-rule);
+  border-radius: .2rem;
+  color: var(--babel-accent);
+  font-size: .6875rem;
+  padding: .16rem .34rem;
+}
+
+.babel-app .babel-status {
+  color: var(--babel-muted);
+  font-size: .75rem;
+  min-height: 2rem;
+  padding-block: .43rem;
+}
+.babel-app .babel-error { color: #962f28; }
+.babel-app .babel-reader {
+  background: var(--babel-surface);
+  border: 1px solid var(--babel-rule);
+  border-radius: .35rem;
+}
+.babel-app .babel-reader-head {
+  background: var(--babel-bg);
+  border-bottom: 1px solid var(--babel-rule);
+  border-radius: .35rem .35rem 0 0;
+  font-size: .75rem;
+  padding: .55rem 1rem;
+}
+.babel-app .babel-reader-head h2 {
+  font-size: .875rem;
+  margin: 0;
+}
+.babel-app .babel-page {
+  --babel-cell: 1ch;
+  font-size: .875rem;
+  line-height: 1.7;
+  min-width: max-content;
+  padding: .85rem 1rem 1.2rem;
+  width: max-content;
+}
+.babel-app .babel-unicode { --babel-cell: 1.25em; }
+.babel-app .babel-line {
+  display: grid;
+  grid-template-columns: 4ch calc(80 * var(--babel-cell));
+}
+.babel-app .babel-line-number {
+  border-right: 1px solid var(--babel-rule);
+  color: var(--babel-muted);
+  margin-right: 1ch;
+}
+.babel-app .babel-line pre {
+  font: inherit;
+  font-variant-ligatures: none;
+  white-space: pre;
+}
+.babel-app .babel-ruler {
+  border-bottom: 1px solid var(--babel-rule);
+  color: var(--babel-muted);
+  margin-bottom: .4rem;
+  padding-bottom: .3rem;
+  width: max-content;
+}
+.babel-app .babel-ticks { direction: ltr; }
+.babel-app .babel-cells {
+  direction: ltr;
+  display: grid;
+  grid-template-columns: repeat(80, var(--babel-cell));
+}
+.babel-app .babel-cells > span {
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  unicode-bidi: isolate;
+  white-space: pre;
+}
+
+@media (max-width: 40rem) {
+  .babel-app .babel-hex-field { flex-basis: 100%; }
+  .babel-app .babel-numbers { flex: 1 1 100%; }
+  .babel-app .babel-probes { margin-top: .35rem; position: static; }
+}

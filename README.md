@@ -22,6 +22,7 @@ playground.html            Experiment directory, separate from main projects
 bloom/index.html           URL-only gift baskets and legacy floral QR links
 arcade/index.html          Snake, Pong, Hangman, number guessing, quiz
 study/index.html           First study-space prototype
+babel/index.html           Dual-Space Library of Babel
 src/
   shared/                  Site theme, navigation, chatbot
   experiments/
@@ -29,6 +30,7 @@ src/
     flowers/               Legacy bouquet geometry, animation, QR and sharing
     arcade/                Game engines, UI, canvas rendering
     study/                 Terrace scene, audio mixer, timer, notes
+    babel/                 Reversible page lookup and React reader
 public/
   images/                  Existing profile and project images
   files/                   Résumé documents
@@ -66,5 +68,7 @@ The study space includes a procedural courtyard, playable chimes, weather, focus
 Drag a pitched note's right edge to resize it in steps, or focus its starting step and use Shift + Left/Right. Loop a selected bar or play from it; edits join at the next bar boundary. Save/recall includes instrument settings and edited bars. WAV export renders the complete arrangement with release/reverb tails even when auditioning one bar. Audio starts on interaction. See [the asset brief](docs/study-assets.md) for environment details.
 
 ## Attribution
+
+See the [Babel guide](docs/babel.md) for the upstream LCG, the autocomplete data build, and React embedding.
 
 Floral QR interaction inspired by [bubbbly.com/bloom](https://www.bubbbly.com/bloom). This project’s geometry, interface, and implementation are original. Lucide icons use ISC; Three.js uses MIT; Google Fonts are provided under their respective open font licenses. The user-provided photograph, résumé, and Proibe audio are retained from existing project assets.
