@@ -3,8 +3,8 @@ import { statSync } from 'node:fs';
 import test from 'node:test';
 import { coordinateBadgeForSeed, coordinateForSeed, formatCoordinate, parseCoordinate, seedForCoordinate } from '../src/experiments/babel/engine/coordinates.js';
 import { makePermutation } from '../src/experiments/babel/engine/lcg.js';
-import { lookupText, MAX_SEED, nextBrowseSeed, ORDERED, pageForSeed, RAW } from '../src/experiments/babel/engine/library.js';
-import { probeNextWords } from '../src/experiments/babel/engine/probes.js';
+import { lookupText, MAX_SEED, nextBrowseSeed, ORDERED, pageForSeed, RAW, searchText } from '../src/experiments/babel/engine/library.js';
+import { probeSuggestions, suggestWords } from '../src/experiments/babel/engine/probes.js';
 import { orderedCodec, PAGE_SIZE, rawCodec } from '../src/experiments/babel/engine/radix.js';
 
 test('the adapted inverse covers the whole domain, including output zero', () => {
@@ -82,21 +82,47 @@ test('coordinate parsing enforces field bounds and abbreviated hexagons match th
   assert.throws(() => parseCoordinate(formatCoordinate(coordinateForSeed(MAX_SEED - 1n))), /outside/);
 });
 
-test('autocomplete is a bounded, stable set of exact coordinate lookups', () => {
+test('autocomplete completes the current word and uses preceding context', () => {
+  assert.equal(suggestWords('hel')[0].phrase, 'hello');
+  assert.equal(suggestWords('comp')[0].phrase, 'computer');
+  assert.equal(suggestWords('in the m')[0].phrase, 'in the morning');
+  assert.equal(suggestWords('Hel')[0].phrase, 'Hello');
+  assert.equal(suggestWords('hello')[0].phrase, 'hello world');
+  assert.equal(suggestWords('hello ')[0].phrase, 'hello world');
+  assert.deepEqual(suggestWords('I wan').map(result => result.phrase), ['I want', 'I wanted']);
+  assert.deepEqual(suggestWords('qzxv '), []);
+  assert.deepEqual(suggestWords(''), []);
+  assert.deepEqual(suggestWords('a'.repeat(PAGE_SIZE)), []);
+});
+
+test('search opens a full deterministic page while exact mode preserves old addresses', () => {
+  for (const input of ['hello world', '世界 🪷', 'a'.repeat(PAGE_SIZE), 'x'.repeat(PAGE_SIZE - 1)]) {
+    const target = searchText(input, ORDERED);
+    const page = pageForSeed(target.seed);
+    assert.equal(Array.from(page).length, PAGE_SIZE);
+    assert.ok(page.startsWith(input));
+    assert.equal(searchText(input, ORDERED).seed, target.seed);
+    assert.equal(lookupText(page, target.mode).seed, target.seed);
+    assert.equal(searchText(input, ORDERED, true).seed, lookupText(input, ORDERED).seed);
+    if (input.length < 100) assert.ok(page.slice(input.length).trim().length > 2500);
+  }
+});
+
+test('suggestions resolve to the same filled or exact page as a direct search', () => {
   const file = new URL('../src/experiments/babel/data/english-ngrams.json', import.meta.url);
   assert.ok(statSync(file).size < 150_000);
-  for (const input of ['in the', 'in the ', 'In the']) {
-    const results = probeNextWords(input, ORDERED);
-    assert.equal(results.length, 5);
-    assert.deepEqual(probeNextWords(input, ORDERED), results);
-    assert.equal(new Set(results.map(result => result.word)).size, 5);
-    for (const { phrase, word, mode, seed, badge } of results) {
-      assert.equal(phrase, input.trimEnd() + ' ' + word);
-      assert.equal(lookupText(phrase, mode).seed, seed);
-      assert.equal(pageForSeed(seed).trimEnd(), phrase);
-      assert.deepEqual(coordinateBadgeForSeed(seed), badge);
+  for (const exact of [false, true]) {
+    for (const input of ['hel', 'in the m', 'in the ', 'In the ']) {
+      const results = probeSuggestions(input, ORDERED, exact);
+      assert.ok(results.length > 0 && results.length <= 5);
+      assert.deepEqual(probeSuggestions(input, ORDERED, exact), results);
+      assert.equal(new Set(results.map(result => result.phrase)).size, results.length);
+      for (const { phrase, seed, badge } of results) {
+        assert.ok(phrase.startsWith(input));
+        assert.equal(searchText(phrase, ORDERED, exact).seed, seed);
+        assert.ok(pageForSeed(seed).startsWith(phrase));
+        assert.deepEqual(coordinateBadgeForSeed(seed), badge);
+      }
     }
   }
-  assert.deepEqual(probeNextWords('', ORDERED), []);
-  assert.deepEqual(probeNextWords('a'.repeat(PAGE_SIZE), ORDERED), []);
 });

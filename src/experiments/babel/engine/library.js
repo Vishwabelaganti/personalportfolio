@@ -52,3 +52,13 @@ export function nextBrowseSeed(seed, mode = modeForSeed(seed)) {
   const next = domain.seed(index);
   return next === seed ? domain.seed((index + 1n) % domain.preferredSize) : next;
 }
+
+export function searchText(text, mode = ORDERED, exact = false) {
+  const result = lookupText(text, mode);
+  const length = Array.from(text).length;
+  if (exact || length === PAGE_SIZE) return result;
+  const separator = /\s$/.test(text) ? '' : ' ';
+  const context = pageForSeed(nextBrowseSeed(result.seed, result.mode));
+  const fullPage = text + separator + context.slice(0, PAGE_SIZE - length - separator.length);
+  return lookupText(fullPage, result.mode);
+}

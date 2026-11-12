@@ -9,7 +9,7 @@ function showCell(char) {
   return /\p{M}/u.test(char) ? '◌' + char : char;
 }
 
-export function PageViewer({ page, coordinate, onStatus }) {
+export function PageViewer({ page, coordinate, onStatus, matchLength = 0, exact = false, onTurn }) {
   const heading = useId();
   const [copyFallback, setCopyFallback] = useState(false);
   const { lines, classic } = useMemo(() => {
@@ -35,11 +35,16 @@ export function PageViewer({ page, coordinate, onStatus }) {
     <section className="babel-reader" aria-labelledby={heading}>
       <div className="babel-reader-head flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h2 id={heading}>Page view</h2>
+          <h2 id={heading}>Book {coordinate.volume} · Page {coordinate.page}</h2>
           <span className="babel-muted">80 columns × 40 rows</span>
         </div>
-        <button type="button" className="babel-button" onClick={copyCoordinate}>Copy coordinate</button>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="babel-button" disabled={coordinate.page === 1} onClick={() => onTurn(-1)}>← Previous page</button>
+          <button type="button" className="babel-button" disabled={coordinate.page === 410} onClick={() => onTurn(1)}>Next page →</button>
+          <button type="button" className="babel-button" onClick={copyCoordinate}>Copy coordinate</button>
+        </div>
       </div>
+      {matchLength > 0 && <p className="babel-match-note">Match at line 1, column 1. {exact ? 'Exact text only — the remaining cells are spaces.' : 'The rest of this page comes from a deterministic library lookup.'}</p>}
       {copyFallback && (
         <input
           aria-label="Full coordinate"
@@ -61,9 +66,11 @@ export function PageViewer({ page, coordinate, onStatus }) {
           {lines.map((line, index) => (
             <div key={index} className="babel-line">
               <span className="babel-line-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-              {classic ? <pre className="m-0">{line.join('')}</pre> : (
+              {classic ? <pre className="m-0">{matchLength > index * COLUMNS
+                ? <><mark>{line.slice(0, matchLength - index * COLUMNS).join('')}</mark>{line.slice(Math.max(0, matchLength - index * COLUMNS)).join('')}</>
+                : line.join('')}</pre> : (
                 <div className="babel-cells">{line.map((char, column) => (
-                  <span key={column} title={showCell(char) === char ? undefined : 'U+' + char.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}>
+                  <span className={index * COLUMNS + column < matchLength ? 'babel-cell-match' : undefined} key={column} title={showCell(char) === char ? undefined : 'U+' + char.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')}>
                     {showCell(char)}
                   </span>
                 ))}</div>

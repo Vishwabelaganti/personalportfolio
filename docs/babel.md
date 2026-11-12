@@ -19,12 +19,15 @@ src/experiments/babel/
     radix.js                              Mixed-radix, base-29 and Unicode codecs
     library.js                            Parity, exact lookup and deterministic browse
     coordinates.js                        Base-36 hexagon and four bounded fields
-    probes.js                             Static word ranking and reverse lookups
+    probes.js                             Prefix/context ranking and reverse lookups
+    probe.worker.js                       Background coordinate resolution
   ui/
     BabelApp.jsx                          State and optional fragment navigation
     SearchBar.jsx                         Search, autocomplete and mode
     CoordinateNavigator.jsx               Address form and random browse
-    PageViewer.jsx                        Ruler, 40 rows and coordinate copy
+    PageViewer.jsx                        Highlighted reader and page navigation
+    LibraryScene.jsx                      3D viewport and accessible book controls
+  scene/library-scene.js                  Interactive Three.js walls and shelves
   data/english-ngrams.json                 Static frequency ranks
 scripts/build-babel-ngrams.mjs             Offline frequency table builder
 tests/babel.test.js                        Round trips, bounds and probe coverage
@@ -32,7 +35,7 @@ tests/babel.test.js                        Round trips, bounds and probe coverag
 
 ## Address mapping
 
-A page has 3,200 cells, each one Unicode scalar value. Exact lookup starts at cell one and pads with U+0020 spaces. Leading spaces, case, and punctuation are preserved. Inputs that differ only by trailing spaces yield the same padded page. Unpaired UTF-16 surrogates are rejected.
+A page has 3,200 cells, each one Unicode scalar value. Search opens a full deterministic page with the query anchored at cell one. The remaining cells come from a browse page selected deterministically from the query’s original exact address, and the whole page is reverse-mapped to a coordinate. **Exact text only** retains the original lookup with U+0020 padding. Existing coordinates and links resolve to the same text. Leading spaces, case, and punctuation are preserved. In exact-text mode, inputs that differ only by trailing spaces yield the same padded page. Unpaired UTF-16 surrogates are rejected.
 
 | Parity | Browse range | Additional exact lookup range |
 | --- | --- | --- |
@@ -47,7 +50,11 @@ Each additional range groups pages by the first slot that breaks its browse patt
 
 ## Build the autocomplete dictionary
 
-The committed JSON contains the top 5,000 bigrams and 3,000 trigrams from ten Project Gutenberg English texts in the US public domain. It stores words in frequency order per context, with alphabetical tie breaks. The original books stay out of the build. The client checks the last two words, then the last word, then common words until it has up to five exact addresses.
+The committed JSON is below 150 KB and contains 5,000 bigrams, 3,000 trigrams, and 6,000 vocabulary entries from ten Project Gutenberg English texts in the US public domain. Vocabulary filtering removes tokens used mainly as capitalized names. A small, explicitly authored common-word and greeting list supplements that corpus. Frequency order and alphabetical tie breaks keep results stable.
+
+While typing, suggestions complete the current word. The previous two words take priority over the previous single word. A space requests next-word suggestions, and unknown contexts yield no arbitrary fallback. Tab accepts a completion into the input. Clicking a suggestion or pressing Enter on a selected one opens its resolved address. A worker computes coordinate badges so typing stays responsive, and request identities prevent stale results from opening the wrong page.
+
+The Three.js view contains four walls with five shelves and 32 books per shelf. Click a book in the scene or use the matching keyboard-accessible controls. The selected book and shelf follow searches and coordinate changes. Previous and Next page step through the book’s physical pages, with seed parity determining the displayed space. WebGL failure leaves the HTML controls and reader available.
 
 To rebuild it, download plain-text editions for Gutenberg books 11, 84, 98, 174, 345, 1260, 1342, 1400, 1661, and 2701. The file URL format is `https://www.gutenberg.org/cache/epub/ID/pgID.txt`. Save the files together and run:
 
